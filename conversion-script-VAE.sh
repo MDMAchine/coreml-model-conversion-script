@@ -88,8 +88,12 @@ fi
 VAE_DIR="${VAE_LOAD}"
 FILE_1="MoistMixV2.vae.pt"
 FILE_2="orangemix.vae.pt"
+FILE_3="2.1-diffusion_pytorch_model.bin"
+FILE_4="1.5-diffusion_pytorch_model.bin"
 FILE_URL_1="https://huggingface.co/MoistMix/MoistMixV2/resolve/main/MoistMixV2.vae.pt"
 FILE_URL_2="https://huggingface.co/WarriorMama777/OrangeMixs/resolve/main/VAEs/orangemix.vae.pt"
+FILE_URL_3="https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/vae/diffusion_pytorch_model.bin"
+FILE_URL_4="https://huggingface.co/mdmachine/1.5-diffusion_pytorch_model/resolve/main/1.5-diffusion_pytorch_model.bin"
 
 if [ ! -d "$VAE_DIR" ]; then
   mkdir "$VAE_DIR"
@@ -105,6 +109,16 @@ fi
 if [ ! -f "$VAE_DIR/$FILE_2" ]; then
   echo "Downloading $FILE_2"
   wget --progress=bar:force:noscroll -O "$VAE_DIR/$FILE_2" "$FILE_URL_2"
+fi
+
+if [ ! -f "$VAE_DIR/$FILE_3" ]; then
+  echo "Downloading $FILE_3"
+  wget --progress=bar:force:noscroll -O "$VAE_DIR/$FILE_3" "$FILE_URL_3"
+fi
+
+if [ ! -f "$VAE_DIR/$FILE_4" ]; then
+  echo "Downloading $FILE_4"
+  wget --progress=bar:force:noscroll -O "$VAE_DIR/$FILE_4" "$FILE_URL_4"
 fi
 
 : <<DISABLED
