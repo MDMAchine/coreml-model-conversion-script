@@ -1,6 +1,6 @@
 # CoreML model conversion script(s):
 
-Just a few scripts I put together to make converting SD models for [Core ML for use on Apple Silicon devices](https://github.com/apple/ml-stable-diffusion) easier.
+Just a few scripts I tied together to make converting SD models for [Core ML for use on Apple Silicon devices](https://github.com/apple/ml-stable-diffusion) easier. They started off as independent items so there is redundancy & fluff that will maybe get addressed later.
 
 Provide the created model(s) to an app such as Mochi Diffusion [Github](https://github.com/godly-devotion/MochiDiffusion) - [Discord](https://discord.gg/x2kartzxGv) to generate images.<br>
 
