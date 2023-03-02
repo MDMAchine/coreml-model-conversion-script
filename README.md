@@ -23,6 +23,6 @@ This script assumes you have an [environment](https://www.infoworld.com/article/
 This script expects ["convert_original_stable_diffusion_to_diffusers.py"](https://gist.github.com/saftle/c5e222c6231e7b19f01bb93ac9fcc191/raw/961d49481f472159c0696d929b10647b2c0cc158/replace_vae.py) to be located in root directory. And [diffusers](https://huggingface.co/docs/diffusers/installation) - [Link2](https://pypi.org/project/diffusers/) installed.
 Preferably use the "convert_original_stable_diffusion_to_diffusers.py" from the [updated diffusers](https://github.com/huggingface/diffusers). 
 
-Variant selector is rudimentary. If you cant remember whats on and off either look at the files or "reset" it enable all then disable all. After that make other selections.
+Variant selector is rudimentary. If you cant remember whats on and off, either look at the files or "reset" it by running enable all, then disable all. After that make other selections.
 
 ## No guarantee it runs "as is" on any setup. Editing may be required!
