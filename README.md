@@ -10,7 +10,7 @@ This script needs some setup parameters before it can be used.
 - MODELS_LOAD 	= Location of models (ckpt).
 - COMPRESSED_DUMP = Location where compressed files are sent.
 
-The initioal setup will ask you to update these parameters.
+The initital setup will ask you to update these parameters.
 
 ## Note:
 
