@@ -14,7 +14,7 @@ The initital setup will ask you to update these parameters.
 
 ## Note:
 
-Since this script uses on the fly code insertion and corruption is a possibility. A backup (up to 3) is made for edits of variables and model name.
+Since this script uses on the fly code insertion and corruption is a possibility. A backup (up to 3) of the scripts is made for edits of variables and model name.
 
 Start the script by running conversion-script-setup.sh
 
