@@ -5,10 +5,10 @@ Just a few scripts I put together to make converting SD models for [Core ML for 
 Provide the created model(s) to an app such as Mochi Diffusion [Github](https://github.com/godly-devotion/MochiDiffusion) - [Discord](https://discord.gg/x2kartzxGv) to generate images.<br>
 
 This script needs some setup parameters before it can be used.
--ROOT_DIR 		= The location of [ml-stable-diffusion-main](https://github.com/apple/ml-stable-diffusion).
--WORK_DIR 		= The location of these scripts.
--MODELS_LOAD 	= Location of models (ckpt).
--COMPRESSED_DUMP = Location where compressed files are sent.
+- ROOT_DIR 		= The location of [ml-stable-diffusion-main](https://github.com/apple/ml-stable-diffusion).
+- WORK_DIR 		= The location of these scripts.
+- MODELS_LOAD 	= Location of models (ckpt).
+- COMPRESSED_DUMP = Location where compressed files are sent.
 
 The initioal setup will ask you to update these parameters.
 
