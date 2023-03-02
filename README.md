@@ -16,7 +16,7 @@ The initital setup will ask you to update these parameters.
 
 Since this script uses on the fly code insertion and corruption is a possibility. A backup (up to 3) of the scripts is made before edits of variables and model name are made.
 
-**Start the script by running conversion-script-setup.sh**
+**Start the script by running "conversion-script-setup.sh"**
 
 This script assumes you have an [environment](https://www.infoworld.com/article/3239675/virtualenv-and-venv-python-virtual-environments-explained.html) already set up. No guarantee it runs "as is" on any setup.
 Reference [here](https://github.com/godly-devotion/MochiDiffusion/wiki/How-to-convert-CKPT-or-SafeTensors-files-to-Core-ML) and [here](https://github.com/apple/ml-stable-diffusion#-converting-models-to-core-ml).
