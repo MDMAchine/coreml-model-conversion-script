@@ -44,72 +44,11 @@ cat << "EOF"
 EOF
 sleep 1
 
+# Set Perms
+cd "$(dirname "${BASH_SOURCE[0]}")"
+sleep 0.1
 chmod 755 ./*
 sleep 0.1
-cd "${ROOT_DIR}"
-sleep 0.1
-. bin/activate
-sleep 0.1
-cd "${WORK_DIR}"
-sleep 0.1
-
-###################################################################
-
-echo "${CYAN}Option to update diffusers and safetensors via pip and place original to diffusers script into root:${RESET}"
-echo ""
-echo ""
-sleep 0.2
-
-# ask if the user wants to update diffusers and safetensors
-read -t 5 -p "${RED}Do you want to install/update stuff related to the scripts?${RESET} (y/n) ${YELLOW}Skipping in 5 seconds.${RESET} " update_diffusers_safetensors
-
-# if there is no input in 3 seconds, continue on
-if [ -z "$update_diffusers_safetensors" ]; then
-  echo "${RED}No input received. Skipping update of diffusers and safetensors.${RESET}"
-else
-  if [ "$update_diffusers_safetensors" == "y" ]; then
-    pip install --upgrade diffusers transformers accelerate safetensors omegaconf torch coremltools scipy
-    cd "${ROOT_DIR}"
-	pip install -e .
-	cd "${WORK_DIR}"
-	#pip install diffusers[torch]
-  else
-    echo "${RED}Skipping update of diffusers and safetensors.${RESET}"
-  fi
-fi
-
-echo ""
-echo ""
-sleep 0.2
-
-# ask if the user wants to update convert_original_stable_diffusion_to_diffusers.py
-read -t 5 -p "${RED}Do you want to update 'convert_original_stable_diffusion_to_diffusers.py'?${RESET} (y/n) ${YELLOW}Skipping in 5 seconds.${RESET} " update_convert_script
-
-# if there is no input in 3 seconds, continue on
-if [ -z "$update_convert_script" ]; then
-  echo "${RED}No input received. Skipping update of 'convert_original_stable_diffusion_to_diffusers.py'.${RESET}"
-else
-  if [ "$update_convert_script" == "y" ]; then
-    # backup the old script with a max limit of 3
-    for i in $(seq 2 -1 0); do
-      if [ -f "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers_${i}.py" ]; then
-        mv "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers_${i}.py" "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers_$((i+1)).py"
-      fi
-    done
-    if [ -f "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers.py" ]; then
-      mv "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers.py" "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers_1.py"
-    fi
-
-    # download the new script
-    curl -o "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers.py" https://raw.githubusercontent.com/huggingface/diffusers/8dfff7c01529a1a476696691626b261f92fd19e3/scripts/convert_original_stable_diffusion_to_diffusers.py
-  else
-    echo "${RED}Skipping update of 'convert_original_stable_diffusion_to_diffusers.py'.${RESET}"
-  fi
-fi
-
-echo ""
-echo ""
-sleep 0.2
 
 ###################################################################
 
@@ -166,6 +105,7 @@ if [[ "$answer" =~ ^[yY]$ ]]; then
     # Execute command if user chooses to update variables
     echo -e "${GREEN}Updating variables${RESET}"
     nice -n 10 ./conversion-script-variables.sh
+    exec "$0"
 else
     echo -e "${YELLOW}Skipping variable update${RESET}"
 fi
@@ -175,6 +115,7 @@ echo ""
 sleep 0.2
 
 #########################################################################
+
 
 # Prompt the user to update the model name and extension
 read -p "Do you want to update the model filename and extension? (y/n) " answer
@@ -221,8 +162,66 @@ sleep 0.2
 
 ###################################################################
 
+echo "${CYAN}Option to update requiremnts via pip & place 'convert_original_stable_diffusion_to_diffusers.py' into root:${RESET}"
+echo ""
+echo ""
+sleep 0.2
+
+# ask if the user wants to update diffusers and safetensors
+read -t 10 -p "${RED}Do you want to install/update stuff related to the scripts?${RESET} (y/n) ${YELLOW}Skipping in 10 seconds.${RESET} " update_diffusers_safetensors
+
+# if there is no input in 3 seconds, continue on
+if [ -z "$update_diffusers_safetensors" ]; then
+  echo "${RED}No input received. Skipping update of diffusers and safetensors.${RESET}"
+else
+  if [ "$update_diffusers_safetensors" == "y" ]; then
+    pip install --upgrade diffusers transformers accelerate safetensors omegaconf torch coremltools scipy
+    cd "${ROOT_DIR}"
+	pip install -e .
+	cd "${WORK_DIR}"
+	#pip install diffusers[torch]
+  else
+    echo "${RED}Skipping update of diffusers and safetensors.${RESET}"
+  fi
+fi
+
+echo ""
+echo ""
+sleep 0.2
+
+# ask if the user wants to update convert_original_stable_diffusion_to_diffusers.py
+read -t 10 -p "${RED}Do you want to update 'convert_original_stable_diffusion_to_diffusers.py'?${RESET} (y/n) ${YELLOW}Skipping in 10 seconds.${RESET} " update_convert_script
+
+# if there is no input in 3 seconds, continue on
+if [ -z "$update_convert_script" ]; then
+  echo "${RED}No input received. Skipping update of 'convert_original_stable_diffusion_to_diffusers.py'.${RESET}"
+else
+  if [ "$update_convert_script" == "y" ]; then
+    # backup the old script with a max limit of 3
+    for i in $(seq 2 -1 0); do
+      if [ -f "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers_${i}.py" ]; then
+        mv "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers_${i}.py" "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers_$((i+1)).py"
+      fi
+    done
+    if [ -f "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers.py" ]; then
+      mv "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers.py" "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers_1.py"
+    fi
+
+    # download the new script
+    curl -o "${ROOT_DIR}/convert_original_stable_diffusion_to_diffusers.py" https://raw.githubusercontent.com/huggingface/diffusers/8dfff7c01529a1a476696691626b261f92fd19e3/scripts/convert_original_stable_diffusion_to_diffusers.py
+  else
+    echo "${RED}Skipping update of 'convert_original_stable_diffusion_to_diffusers.py'.${RESET}"
+  fi
+fi
+
+echo ""
+echo ""
+sleep 0.2
+
+###################################################################
+
 # Define variables
-FOLDERS=("Diffusers" "Embedded Pickles" "Models" "VAE")
+FOLDERS=("Diffusers" "Models" "VAE")
 TIMER=3
 
 # Check if folders exist and create them if they don't, or print a message if they do

@@ -99,29 +99,6 @@ FILE_URL_4="https://huggingface.co/mdmachine/VAE/resolve/main/VAE/1.5-diffusion_
 if [ ! -d "$VAE_DIR" ]; then
   mkdir "$VAE_DIR"
 fi
-: <<DISABLED
-# wget method
-
-if [ ! -f "$VAE_DIR/$FILE_1" ]; then
-  echo "Downloading $FILE_1"
-  wget --progress=bar:force:noscroll -O "$VAE_DIR/$FILE_1" "$FILE_URL_1"
-fi
-
-if [ ! -f "$VAE_DIR/$FILE_2" ]; then
-  echo "Downloading $FILE_2"
-  wget --progress=bar:force:noscroll -O "$VAE_DIR/$FILE_2" "$FILE_URL_2"
-fi
-
-if [ ! -f "$VAE_DIR/$FILE_3" ]; then
-  echo "Downloading $FILE_3"
-  wget --progress=bar:force:noscroll -O "$VAE_DIR/$FILE_3" "$FILE_URL_3"
-fi
-
-if [ ! -f "$VAE_DIR/$FILE_4" ]; then
-  echo "Downloading $FILE_4"
-  wget --progress=bar:force:noscroll -O "$VAE_DIR/$FILE_4" "$FILE_URL_4"
-fi
-DISABLED
 
 # curl method
 
@@ -145,54 +122,6 @@ if [ ! -f "$VAE_DIR/$FILE_4" ]; then
   curl -# -L "$FILE_URL_4" -o "$VAE_DIR/$FILE_4"
 fi
 
-#########################################################################
-#	EMBEDDINGS
-#########################################################################
-: <<DISABLED
-if [[ "${EXTENSION}" == "ckpt" ]]; then
-  # Function to create embeddings from a specified checkpoint path and dump path
-  function create_embeds() {
-    local vae_path="$1"
-    local dump_vae="$2"
-    local attempts=3
-
-    # Check if dump path exists, skip creation if it does
-    if [[ -f "${dump_vae}" ]]; then
-      echo "${YELLOW}Skipping embedding, file already exists: ${dump_vae}${RESET}"
-      return
-    fi
-
-    # Try creating embeddings with given checkpoint path and dump path up to 3 times
-    for ((i=1; i<=$attempts; i++)); do
-      if python "$WORK_DIR/replace-vae.py" "${vae_path}" "${MODELS_LOCAL}.${EXTENSION}" "${dump_vae}"; then
-        echo "${GREEN}The conversion of the workfile into an embedded pickle is complete${RESET}"
-        echo ""
-        return
-      else
-        echo "${CYAN}Conversion killed with exit code $?. Respawning...${RESET}" >&2
-        echo "${YELLOW}Retrying #$i out of $attempts...${RESET}"
-        sleep 0.3
-      fi
-    done
-
-    # If creation failed too many times, skip and print message
-    echo "${RED}Skipping after too many attempts${RESET}"
-  }
-
-  # Change directory to Stable Diffusion project
-  cd "${ROOT_DIR}"
-
-  # Create embeddings
-  start=$SECONDS
-  echo "${RED}Now creating embedded pickles...${RESET}"
-  create_embeds "${VAE_LOAD}/moistmixv2-vae.pt" "${WORK_DIR}/${MODEL_NAME}"
-  create_embeds "${VAE_LOAD}/orangemix-vae.pt" "${WORK_DIR}/${MODEL_NAME}"
-  duration=$(( SECONDS - start ))
-  echo "${GREEN}The conversion of embedded pickle took $duration seconds to complete${RESET}"
-else
-  echo "${YELLOW}Skipping script because EXTENSION is not set to 'ckpt'${RESET}"
-fi
-DISABLED
 #########################################################################
 #	DIFFUSERS
 #########################################################################
@@ -232,16 +161,6 @@ function create_diffusers() {
     echo ""
 }
 
-: <<DISABLED
-# Create diffusers from orangemix embedded workfile
-echo "${RED} Now creating diffusers from orangemix embedded workfile... ${RESET}"
-start=$SECONDS
-create_diffusers "${MODELS_LOCAL}_orangemix-vae.ckpt" "${DIFFUSERS_DUMP}/${MODEL_NAME}_orangemix-vae_diffusers_model/"
-
-# Create diffusers from moistmixv2 embedded workfile
-echo "${RED} Now creating diffusers from moistmixv2 embedded workfile... ${RESET}"
-create_diffusers "${MODELS_LOCAL}_moistmixv2-vae.ckpt" "${DIFFUSERS_DUMP}/${MODEL_NAME}_moistmixv2-vae_diffusers_model/"
-DISABLED
 # Create diffusers from raw workfile
 echo "${RED} Now creating diffusers from the raw workfile into diffusers... ${RESET}"
 create_diffusers "${MODELS_LOCAL}.${EXTENSION}" "${DIFFUSERS_DUMP}/${MODEL_NAME}_raw_diffusers_model/"
@@ -331,14 +250,7 @@ fi
 	echo "$(tput setaf 1) Cleaning Up! $(tput sgr 0)"
 	echo ""
 	sleep 0.3
-: <<DISABLED
-# Move the embedded pickle files
-cd "${WORK_DIR}"
-for file in "${MODEL_NAME}_orangemix-vae.${EXTENSION}" "${MODEL_NAME}_moistmixv2-vae.${EXTENSION}"; do
-    mv "$file" "${EM_PICKLES_DUMP}"
-    sleep 0.3
-done
-DISABLED
+
 # Check if workfile exists
 if [[ ! -f "${WORK_DIR}/${MODEL_NAME}.${EXTENSION}" ]]; then
   echo "Workfile does not exist, skipping deletion."

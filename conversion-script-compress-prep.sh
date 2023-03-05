@@ -11,7 +11,7 @@ MODELS_LOAD="/Volumes/External Drive/Model Archive"
 COMPRESSED_DUMP="/Volumes/External Drive/Uploads"
 DIFFUSERS_DUMP="${WORK_DIR}/Diffusers"
 EM_PICKLES_DUMP="${WORK_DIR}/Embedded Pickles"
-MODELS_LOCAL="${WORK_DIR}/${MODEL_NAME}.${EXTENSION}"
+MODELS_LOCAL="${WORK_DIR}/${MODEL_NAME}"
 MODELS_DUMP="${WORK_DIR}/Models"
 VAE_LOAD="${WORK_DIR}/VAE"
 
