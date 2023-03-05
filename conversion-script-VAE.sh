@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Set the name of the model to be replaced
-MODEL_NAME="changeme"
+# Set the name of the model and its extension to be replaced
+MODEL_NAME="modelname"
+EXTENSION="safetensors"
 
 # Set variables for easy updating
 ROOT_DIR="/ml-stable-diffusion-main"
@@ -32,8 +33,8 @@ cat << "EOF"
 
 VAE Embedding                                      
 EOF
-echo -e "${RESET}${YELLOW}Version 06${RESET}"
-sleep 0.5
+echo -e "${RESET}${YELLOW}Version 07${RESET}"
+sleep 0.3
 
 # Print message indicating activation of environment
 echo "${RED}🚀 Activating Environment...🚀${RESET}"
@@ -41,20 +42,20 @@ sleep 0.2
 
 # Navigate to the project directory and activate the virtual environment
 cd "${ROOT_DIR}"
-sleep 0.3
+sleep 0.2
 . bin/activate
 sleep 0.2
 
 # Navigate to the work directory
 cd "${WORK_DIR}"
-sleep 0.2
+sleep 0.1
 
 # Print message indicating successful activation of environment
 echo "${GREEN}🎉 Environment Activated!${RESET}"
-sleep 0.5
+sleep 0.3
 
 #########################################################################
-#							SETUP
+#	SETUP
 #########################################################################
 
 # Copy workfile to working directory
@@ -64,13 +65,13 @@ echo ""
 sleep 0.3
 
 # Check if file exists before copying
-if [ -f "${WORK_DIR}/${MODEL_NAME}.ckpt" ]; then
+if [ -f "${WORK_DIR}/${MODEL_NAME}.${EXTENSION}" ]; then
   echo ""
   echo "${YELLOW}File already exists in working directory. Skipping copy.${RESET}"
   echo ""
 else
   start=$SECONDS
-  cp -v "${MODELS_LOAD}/${MODEL_NAME}.ckpt" "${WORK_DIR}"
+  cp -v "${MODELS_LOAD}/${MODEL_NAME}.${EXTENSION}" "${WORK_DIR}"
   end=$SECONDS
   duration=$(( end - start ))
   echo ""
@@ -80,25 +81,25 @@ else
 fi
 
 #########################################################################
-#							DOWNLOADS
+#	DOWNLOADS
 #########################################################################
 
 # Check for the VAE files and if not found download them
 
 VAE_DIR="${VAE_LOAD}"
-FILE_1="MoistMixV2.vae.pt"
-FILE_2="orangemix.vae.pt"
+FILE_1="moistmixv2-diffusion_pytorch_model.bin"
+FILE_2="orangemix-diffusion_pytorch_model.bin"
 FILE_3="2.1-diffusion_pytorch_model.bin"
 FILE_4="1.5-diffusion_pytorch_model.bin"
-FILE_URL_1="https://huggingface.co/MoistMix/MoistMixV2/resolve/main/MoistMixV2.vae.pt"
-FILE_URL_2="https://huggingface.co/WarriorMama777/OrangeMixs/resolve/main/VAEs/orangemix.vae.pt"
-FILE_URL_3="https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/vae/diffusion_pytorch_model.bin"
-FILE_URL_4="https://huggingface.co/mdmachine/1.5-diffusion_pytorch_model/resolve/main/1.5-diffusion_pytorch_model.bin"
+FILE_URL_1="https://huggingface.co/mdmachine/VAE/resolve/main/VAE/moistmixv2-diffusion_pytorch_model.bin"
+FILE_URL_2="https://huggingface.co/mdmachine/VAE/resolve/main/VAE/orangemix-diffusion_pytorch_model.bin"
+FILE_URL_3="https://huggingface.co/mdmachine/VAE/resolve/main/VAE/2.1-diffusion_pytorch_model.bin"
+FILE_URL_4="https://huggingface.co/mdmachine/VAE/resolve/main/VAE/1.5-diffusion_pytorch_model.bin"
 
 if [ ! -d "$VAE_DIR" ]; then
   mkdir "$VAE_DIR"
 fi
-
+: <<DISABLED
 # wget method
 
 if [ ! -f "$VAE_DIR/$FILE_1" ]; then
@@ -120,8 +121,8 @@ if [ ! -f "$VAE_DIR/$FILE_4" ]; then
   echo "Downloading $FILE_4"
   wget --progress=bar:force:noscroll -O "$VAE_DIR/$FILE_4" "$FILE_URL_4"
 fi
+DISABLED
 
-: <<DISABLED
 # curl method
 
 if [ ! -f "$VAE_DIR/$FILE_1" ]; then
@@ -134,55 +135,68 @@ if [ ! -f "$VAE_DIR/$FILE_2" ]; then
   curl -# -L "$FILE_URL_2" -o "$VAE_DIR/$FILE_2"
 fi
 
-DISABLED
+if [ ! -f "$VAE_DIR/$FILE_3" ]; then
+  echo "Downloading $FILE_3"
+  curl -# -L "$FILE_URL_3" -o "$VAE_DIR/$FILE_3"
+fi
+
+if [ ! -f "$VAE_DIR/$FILE_4" ]; then
+  echo "Downloading $FILE_4"
+  curl -# -L "$FILE_URL_4" -o "$VAE_DIR/$FILE_4"
+fi
 
 #########################################################################
-#							EMBEDDINGS
+#	EMBEDDINGS
 #########################################################################
+: <<DISABLED
+if [[ "${EXTENSION}" == "ckpt" ]]; then
+  # Function to create embeddings from a specified checkpoint path and dump path
+  function create_embeds() {
+    local vae_path="$1"
+    local dump_vae="$2"
+    local attempts=3
 
-# Function to create embeddings from a specified checkpoint path and dump path
-function create_embeds() {
-  local vae_path="$1"
-  local dump_vae="$2"
-  local attempts=3
-
-  # Check if dump path exists, skip creation if it does
-  if [[ -f "${dump_vae}" ]]; then
-    echo "${YELLOW}Skipping embedding, file already exists: ${dump_vae}${RESET}"
-    return
-  fi
-
-  # Try creating embeddings with given checkpoint path and dump path up to 3 times
-  for ((i=1; i<=$attempts; i++)); do
-    if python "$WORK_DIR/replace-vae.py" "${vae_path}" "${MODELS_LOCAL}.ckpt" "${dump_vae}"; then
-      echo "${GREEN}The conversion of the workfile into an embedded pickle is complete${RESET}"
-      echo ""
+    # Check if dump path exists, skip creation if it does
+    if [[ -f "${dump_vae}" ]]; then
+      echo "${YELLOW}Skipping embedding, file already exists: ${dump_vae}${RESET}"
       return
-    else
-      echo "${CYAN}Conversion killed with exit code $?. Respawning...${RESET}" >&2
-      echo "${YELLOW}Retrying #$i out of $attempts...${RESET}"
-      sleep 0.3
     fi
-  done
 
-  # If creation failed too many times, skip and print message
-  echo "${RED}Skipping after too many attempts${RESET}"
-}
+    # Try creating embeddings with given checkpoint path and dump path up to 3 times
+    for ((i=1; i<=$attempts; i++)); do
+      if python "$WORK_DIR/replace-vae.py" "${vae_path}" "${MODELS_LOCAL}.${EXTENSION}" "${dump_vae}"; then
+        echo "${GREEN}The conversion of the workfile into an embedded pickle is complete${RESET}"
+        echo ""
+        return
+      else
+        echo "${CYAN}Conversion killed with exit code $?. Respawning...${RESET}" >&2
+        echo "${YELLOW}Retrying #$i out of $attempts...${RESET}"
+        sleep 0.3
+      fi
+    done
 
-# Change directory to Stable Diffusion project
-cd "${ROOT_DIR}"
+    # If creation failed too many times, skip and print message
+    echo "${RED}Skipping after too many attempts${RESET}"
+  }
 
-# Create embeddings
-start=$SECONDS
-echo "${RED}Now creating embedded pickles...${RESET}"
-create_embeds "${VAE_LOAD}/MoistMixV2.vae.pt" "${MODELS_LOCAL}_moistmixv2-vae.ckpt"
-create_embeds "${VAE_LOAD}/orangemix.vae.pt" "${MODELS_LOCAL}_orangemix-vae.ckpt"
-duration=$(( SECONDS - start ))
-echo "${GREEN}The conversion of embedded pickle took $duration seconds to complete${RESET}"
+  # Change directory to Stable Diffusion project
+  cd "${ROOT_DIR}"
 
+  # Create embeddings
+  start=$SECONDS
+  echo "${RED}Now creating embedded pickles...${RESET}"
+  create_embeds "${VAE_LOAD}/moistmixv2-vae.pt" "${WORK_DIR}/${MODEL_NAME}"
+  create_embeds "${VAE_LOAD}/orangemix-vae.pt" "${WORK_DIR}/${MODEL_NAME}"
+  duration=$(( SECONDS - start ))
+  echo "${GREEN}The conversion of embedded pickle took $duration seconds to complete${RESET}"
+else
+  echo "${YELLOW}Skipping script because EXTENSION is not set to 'ckpt'${RESET}"
+fi
+DISABLED
 #########################################################################
-#							DIFFUSERS
+#	DIFFUSERS
 #########################################################################
+
 # Change directory to Stable Diffusion project
 cd "${ROOT_DIR}"
 
@@ -192,6 +206,11 @@ function create_diffusers() {
     local dump_path="$2"
     local count=1
     local attempts=3
+    local from_safetensors_arg=""
+
+    if [ "$EXTENSION" = "safetensors" ]; then
+        from_safetensors_arg="--from_safetensors"
+    fi
 
     if [ -d "${dump_path}" ]; then
         echo "${YELLOW} ${dump_path} directory exists. Skipping diffuser creation. ${RESET}"
@@ -199,7 +218,7 @@ function create_diffusers() {
     fi
 
     # Try creating diffusers with given checkpoint path and dump path up to 20 times
-    until python convert_original_stable_diffusion_to_diffusers.py --checkpoint_path "${checkpoint_path}" --device cpu --extract_ema --dump_path "${dump_path}" || [[ $count -eq $attempts ]]; do
+    until python convert_original_stable_diffusion_to_diffusers.py --checkpoint_path "${checkpoint_path}" --device cpu --extract_ema --dump_path "${dump_path}" --upcast_attention $from_safetensors_arg || [[ $count -eq $attempts ]]; do
         echo "${CYAN} Conversion killed with exit code $?. Respawning... ${RESET}" >&2
         echo -e "${YELLOW}Retrying #$((count++)) out of 20... ${RESET}\n"
         sleep 0.3
@@ -213,6 +232,7 @@ function create_diffusers() {
     echo ""
 }
 
+: <<DISABLED
 # Create diffusers from orangemix embedded workfile
 echo "${RED} Now creating diffusers from orangemix embedded workfile... ${RESET}"
 start=$SECONDS
@@ -221,10 +241,10 @@ create_diffusers "${MODELS_LOCAL}_orangemix-vae.ckpt" "${DIFFUSERS_DUMP}/${MODEL
 # Create diffusers from moistmixv2 embedded workfile
 echo "${RED} Now creating diffusers from moistmixv2 embedded workfile... ${RESET}"
 create_diffusers "${MODELS_LOCAL}_moistmixv2-vae.ckpt" "${DIFFUSERS_DUMP}/${MODEL_NAME}_moistmixv2-vae_diffusers_model/"
-
+DISABLED
 # Create diffusers from raw workfile
 echo "${RED} Now creating diffusers from the raw workfile into diffusers... ${RESET}"
-create_diffusers "${MODELS_LOCAL}.ckpt" "${DIFFUSERS_DUMP}/${MODEL_NAME}_raw_diffusers_model/"
+create_diffusers "${MODELS_LOCAL}.${EXTENSION}" "${DIFFUSERS_DUMP}/${MODEL_NAME}_raw_diffusers_model/"
 
 # Print the duration of the diffuser creation process
 end=$SECONDS
@@ -232,7 +252,7 @@ duration=$(( end - start ))
 echo "${GREEN} The conversion of diffusers took $duration seconds to complete ${RESET}"
 
 #########################################################################
-#							DUPLICATION
+#	DUPLICATION
 #########################################################################
 
 # Define function to print message in green color
@@ -286,23 +306,41 @@ if duplicate_and_copy_diffusers "$DIFFUSERS_DUMP" "$DIFFUSERS_DUMP" "ema-vae-2.1
     printf "\n%s Duplication & copy took %d seconds to complete.\n\n" "$(tput setaf 2)" "$duration"
 fi
 
+# Duplicate and copy diffusers for orangemix
+print_message "Duplicating raw diffusers and replace VAE with orangemix"
+sleep 1
+start=$SECONDS
+if duplicate_and_copy_diffusers "$DIFFUSERS_DUMP" "$DIFFUSERS_DUMP" "orangemix-vae" "orangemix"; then
+    duration=$(( SECONDS - start ))
+    printf "\n%s Duplication & copy took %d seconds to complete.\n\n" "$(tput setaf 2)" "$duration"
+fi
+
+# Duplicate and copy diffusers for 2.1 SD
+print_message "Duplicating raw diffusers and replace VAE with SD 2.1"
+sleep 1
+start=$SECONDS
+if duplicate_and_copy_diffusers "$DIFFUSERS_DUMP" "$DIFFUSERS_DUMP" "moistmixv2-vae" "moistmixv2"; then
+    duration=$(( SECONDS - start ))
+    printf "\n%s Duplication & copy took %d seconds to complete.\n\n" "$(tput setaf 2)" "$duration"
+fi
+
 ####################################################################
-#								CLEANUP
+#	CLEANUP
 ####################################################################
 	echo ""
 	echo "$(tput setaf 1) Cleaning Up! $(tput sgr 0)"
 	echo ""
 	sleep 0.3
-
+: <<DISABLED
 # Move the embedded pickle files
 cd "${WORK_DIR}"
-for file in "${MODEL_NAME}_orangemix-vae.ckpt" "${MODEL_NAME}_moistmixv2-vae.ckpt"; do
+for file in "${MODEL_NAME}_orangemix-vae.${EXTENSION}" "${MODEL_NAME}_moistmixv2-vae.${EXTENSION}"; do
     mv "$file" "${EM_PICKLES_DUMP}"
     sleep 0.3
 done
-
+DISABLED
 # Check if workfile exists
-if [[ ! -f "${WORK_DIR}/${MODEL_NAME}.ckpt" ]]; then
+if [[ ! -f "${WORK_DIR}/${MODEL_NAME}.${EXTENSION}" ]]; then
   echo "Workfile does not exist, skipping deletion."
   exit 0
 fi
@@ -313,14 +351,14 @@ read -rp "Do you want to delete the workfile? Otherwise it will be automatically
 if [[ -z "${userInput}" ]]; then
   # User didn't respond in time
   echo "Automatically removed workfile after 15 seconds."
-  if rm "${WORK_DIR}/${MODEL_NAME}.ckpt"; then
+  if rm "${WORK_DIR}/${MODEL_NAME}.${EXTENSION}"; then
     echo "Successfully deleted workfile"
   else
     echo "Error: Failed to delete workfile"
   fi
 elif [[ "${userInput}" =~ ^[Yy]$ ]]; then
   # Delete workfile
-  if rm "${WORK_DIR}/${MODEL_NAME}.ckpt"; then
+  if rm "${WORK_DIR}/${MODEL_NAME}.${EXTENSION}"; then
     echo "Successfully deleted workfile"
   else
     echo "Error: Failed to delete workfile"
@@ -334,5 +372,3 @@ sleep 0.3
 echo ""
 echo "${GREEN}Done!${RESET}"
 echo ""
-sleep 0.3
-####################################################################

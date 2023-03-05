@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Set the name of the model to be replaced
-MODEL_NAME="changeme"
+# Set the name of the model and its extension to be replaced
+MODEL_NAME="modelname"
+EXTENSION="safetensors"
 
 # Set variables for easy updating
 ROOT_DIR="/ml-stable-diffusion-main"
@@ -32,8 +33,8 @@ cat << "EOF"
 
 ORIGINAL Conversion                                    
 EOF
-echo -e "${RESET}${YELLOW}Version 06${RESET}"
-sleep 0.5
+echo -e "${RESET}${YELLOW}Version 07${RESET}"
+sleep 0.3
 
 # Print message indicating activation of environment
 echo "${RED}🚀 Activating Environment...🚀${RESET}"
@@ -41,20 +42,20 @@ sleep 0.2
 
 # Navigate to the project directory and activate the virtual environment
 cd "${ROOT_DIR}"
-sleep 0.3
+sleep 0.2
 . bin/activate
 sleep 0.2
 
 # Navigate to the work directory
 cd "${WORK_DIR}"
-sleep 0.2
+sleep 0.1
 
 # Print message indicating successful activation of environment
 echo "${GREEN}🎉 Environment Activated!${RESET}"
-sleep 0.5
+sleep 0.3
 
 ###################################################################
-#								CONVERSION
+#	CONVERSION
 ###################################################################
 
 start=$SECONDS
@@ -156,14 +157,3 @@ rm -rf ./${MODEL_NAME}_ema-vae-2.1_original_compiled
 echo ""
 echo "${GREEN} Conversion of original models took $duration seconds to complete ${RESET}"
 echo ""
-sleep 3
-
-# Prompt the user for input with a timeout of 60 seconds
-read -p "Do you want to reboot? [y/n] " -t 60 -n 1 answer
-
-# Check the user's answer and act accordingly
-if [[ $answer =~ ^[Yy]$ ]]; then
-  sudo reboot
-else
-  echo "Reboot cancelled."
-fi

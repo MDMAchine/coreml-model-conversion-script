@@ -1,16 +1,8 @@
 #!/bin/bash
-# Script By:
-#       _____        _____         _____        _____                                             
-#   ___|    _|__  __|__   |__  ___|    _|__  __|_    |__  ______  __   _  ____  ____   _  ______  
-#  |    \  /  | ||     \     ||    \  /  | ||    \      ||   ___||  |_| ||    ||    \ | ||   ___| 
-#  |     \/   | ||      \    ||     \/   | ||     \     ||   |__ |   _  ||    ||     \| ||   ___| 
-#  |__/\__/|__|_||______/  __||__/\__/|__|_||__|\__\  __||______||__| |_||____||__/\____||______| 
-#      |_____|      |_____|       |_____|      |_____|                                            
-#
-#################################################################################################
 
-# Set the name of the model to be replaced
-MODEL_NAME="changeme"
+# Set the name of the model and its extension to be replaced
+MODEL_NAME="modelname"
+EXTENSION="safetensors"
 
 # Set variables for easy updating
 ROOT_DIR="/ml-stable-diffusion-main"
@@ -41,8 +33,8 @@ cat << "EOF"
 
 CONVERSION SCRIPT - DIFF
 EOF
-echo -e "${RESET}${YELLOW}Version 06${RESET}"
-sleep 0.5
+echo -e "${RESET}${YELLOW}Version 07${RESET}"
+sleep 0.3
 
 # Print message indicating activation of environment
 echo "${RED}🚀 Activating Environment...🚀${RESET}"
@@ -50,38 +42,19 @@ sleep 0.2
 
 # Navigate to the project directory and activate the virtual environment
 cd "${ROOT_DIR}"
-sleep 0.3
+sleep 0.2
 . bin/activate
 sleep 0.2
 
 # Navigate to the work directory
 cd "${WORK_DIR}"
-sleep 0.2
+sleep 0.1
 
 # Print message indicating successful activation of environment
 echo "${GREEN}🎉 Environment Activated!${RESET}"
-sleep 0.5
+sleep 0.3
 
-####################################################################
-## Edited to remove the 15 second timer (its on selector script now)
-#
-## Print the variables name on the screen
-#echo "${RED}Current ROOT_DIR is:${RESET} ${GREEN}$ROOT_DIR${RESET}"
-#echo "${RED}Current WORK_DIR is:${RESET} ${GREEN}$WORK_DIR${RESET}"
-#echo "${RED}Current MODELS_LOAD is:${RESET} ${GREEN}$MODELS_LOAD${RESET}"
-#echo "${RED}Current COMPRESSED_DUMP is:${RESET} ${GREEN}$COMPRESSED_DUMP${RESET}"
-#echo "${RED}Current DIFFUSERS_DUMP is:${RESET} ${GREEN}$DIFFUSERS_DUMP${RESET}"
-#echo "${RED}Current MODELS_LOCAL is:${RESET} ${GREEN}$MODELS_LOCAL${RESET}"
-#echo "${RED}Current MODELS_DUMP is:${RESET} ${GREEN}$MODELS_DUMP${RESET}"
-#echo ""
-#sleep 0.3
-#
-## Print the current model name on the screen
-#echo "${RED}Current model name is:${RESET} ${GREEN}$MODEL_NAME${RESET}"
-#sleep 1
-#echo ""
-#
-##########################################################################
+###################################################################
 
 # Copy workfile to working directory
 echo ""
@@ -90,13 +63,13 @@ echo ""
 sleep 0.3
 
 # Check if file exists before copying
-if [ -f "${WORK_DIR}/${MODEL_NAME}.ckpt" ]; then
+if [ -f "${WORK_DIR}/${MODEL_NAME}.${EXTENSION}" ]; then
   echo ""
   echo "${YELLOW}File already exists in working directory. Skipping copy.${RESET}"
   echo ""
 else
   start=$SECONDS
-  cp -v "${MODELS_LOAD}/${MODEL_NAME}.ckpt" "${WORK_DIR}"
+  cp -v "${MODELS_LOAD}/${MODEL_NAME}.${EXTENSION}" "${WORK_DIR}"
   end=$SECONDS
   duration=$(( end - start ))
   echo ""
@@ -112,19 +85,25 @@ start=$SECONDS
 
 # Function to create diffusers from a specified checkpoint path and dump path
 function create_diffusers() {
-  local checkpoint_path="$1"
-  local dump_path="$2"
-  local attempts=3
+	local checkpoint_path="$1"
+	local dump_path="$2"
+	local attempts=3
+	local from_safetensors_arg=""
+	
+	# Check for is the extension safetensors is set for argument setting
+	if [ "$EXTENSION" = "safetensors" ]; then
+        from_safetensors_arg="--from_safetensors"
+    fi
 
-  # Check if dump path exists, skip creation if it does
-  if [[ -d "${dump_path}" ]]; then
+	# Check if dump path exists, skip creation if it does
+	if [[ -d "${dump_path}" ]]; then
     echo "${YELLOW}Skipping diffuser creation, path already exists: ${dump_path}${RESET}"
     return
-  fi
+	fi
 
-  # Try creating diffusers with given checkpoint path and dump path up to 20 times
-  for ((i=1; i<=$attempts; i++)); do
-    if python convert_original_stable_diffusion_to_diffusers.py --checkpoint_path "${checkpoint_path}" --device cpu --extract_ema --dump_path "${dump_path}"; then
+	# Try creating diffusers with given checkpoint path and dump path up to 20 times
+	for ((i=1; i<=$attempts; i++)); do
+    if python convert_original_stable_diffusion_to_diffusers.py --checkpoint_path "${checkpoint_path}" --device cpu --extract_ema --dump_path "${dump_path}" --upcast_attention $from_safetensors_arg; then
       echo "${GREEN}The conversion of the workfile into diffusers is complete${RESET}"
       echo ""
       return
@@ -141,7 +120,7 @@ function create_diffusers() {
 
 # Create diffusers from raw workfile
 echo "${RED}Now creating diffusers from the raw workfile into diffusers...${RESET}"
-create_diffusers "${MODELS_LOCAL}.ckpt" "${DIFFUSERS_DUMP}/${MODEL_NAME}_raw_diffusers_model/"
+create_diffusers "${MODELS_LOCAL}.${EXTENSION}" "${DIFFUSERS_DUMP}/${MODEL_NAME}_raw_diffusers_model/"
 
 # Print the duration of the diffuser creation process
 duration=$(( SECONDS - start ))
@@ -158,7 +137,7 @@ cd "${WORK_DIR}"
 sleep 0.3
 
 # Check if workfile exists
-if [[ ! -f "${WORK_DIR}/${MODEL_NAME}.ckpt" ]]; then
+if [[ ! -f "${WORK_DIR}/${MODEL_NAME}.${EXTENSION}" ]]; then
   echo "Workfile does not exist, skipping deletion."
   exit 0
 fi
@@ -169,14 +148,14 @@ read -rp "Do you want to delete the workfile? Otherwise it will be automatically
 if [[ -z "${userInput}" ]]; then
   # User didn't respond in time
   echo "Automatically removed workfile after 15 seconds."
-  if rm "${WORK_DIR}/${MODEL_NAME}.ckpt"; then
+  if rm "${WORK_DIR}/${MODEL_NAME}.${EXTENSION}"; then
     echo "Successfully deleted workfile"
   else
     echo "Error: Failed to delete workfile"
   fi
 elif [[ "${userInput}" =~ ^[Yy]$ ]]; then
   # Delete workfile
-  if rm "${WORK_DIR}/${MODEL_NAME}.ckpt"; then
+  if rm "${WORK_DIR}/${MODEL_NAME}.${EXTENSION}"; then
     echo "Successfully deleted workfile"
   else
     echo "Error: Failed to delete workfile"
@@ -190,3 +169,4 @@ sleep 0.3
 # Done message
 echo ""
 echo "${GREEN}Done!${RESET}"
+echo ""

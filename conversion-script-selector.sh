@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Set the name of the model to be replaced
-MODEL_NAME="changeme"
+# Set the name of the model and its extension to be replaced
+MODEL_NAME="modelname"
+EXTENSION="safetensors"
 
 # Set variables for easy updating
 ROOT_DIR="/ml-stable-diffusion-main"
@@ -32,8 +33,8 @@ cat << "EOF"
 
 Script Selection                                       
 EOF
-echo -e "${RESET}${YELLOW}Version 06${RESET}"
-sleep 0.5
+echo -e "${RESET}${YELLOW}Version 07${RESET}"
+sleep 0.3
 
 # Print message indicating activation of environment
 echo "${RED}🚀 Activating Environment...🚀${RESET}"
@@ -41,17 +42,17 @@ sleep 0.2
 
 # Navigate to the project directory and activate the virtual environment
 cd "${ROOT_DIR}"
-sleep 0.3
+sleep 0.2
 . bin/activate
 sleep 0.2
 
 # Navigate to the work directory
 cd "${WORK_DIR}"
-sleep 0.2
+sleep 0.1
 
 # Print message indicating successful activation of environment
 echo "${GREEN}🎉 Environment Activated!${RESET}"
-sleep 0.5
+sleep 0.3
 
 ###################################################################
 
@@ -60,6 +61,8 @@ sleep 0.5
 
 # Define a signal trap to catch SIGTERM and stop the script gracefully
 trap 'printf "\033[1m\033[31mScript stopped by user.\033[0m\n"; (ps -p $! > /dev/null && kill $! &>/dev/null); exit 1' SIGTERM
+
+###################################################################
 
 # Print the variables name on the screen
 echo "${RED}Current ROOT_DIR is:${RESET} ${GREEN}$ROOT_DIR${RESET}"
@@ -73,9 +76,13 @@ echo ""
 sleep 0.3
 
 # Print the current model name on the screen
-echo "${RED}Current model name is:${RESET} ${GREEN}$MODEL_NAME${RESET}"
-sleep 1
+echo "${RED}Current model name and extension is:${RESET} ${GREEN}$MODEL_NAME.$EXTENSION${RESET}"
+
 echo ""
+echo ""
+sleep 0.2
+
+#########################################################################
 
 # Prompt the user for input to continue or stop the script
 printf "\033[1m\033[31mMake sure all variables are updated! If they do not look correct use option 9 to update. Press any key to continue or 's' to stop the script\033[0m\n"
@@ -99,14 +106,14 @@ sleep 0.3
 # Prompt the user to select which conversion scripts to run
 echo "Which conversion scripts would you like to run? (Enter space-separated numbers, e.g., 1 3 4)"
 echo "1) Enable/Disable custom converison sizes and vae types"
-echo "2) Create orignal diffusers & setup for 512x512"
-echo "3) Create custom VAE embeddings and diffusers"
+echo "2) Create diffusers from original source model file"
+echo "3) Create custom VAE diffusers (also generates original source diffusers)"
 echo "4) Convert & compile Original CoreML models (512x512)"
-echo "5) Convert & compile Original CoreML models with custom sizes and vae types"
+echo "5) Convert & compile Original CoreML models with custom sizes and vae types (see option 1)"
 echo "6) Convert & compile Split einsum CoreML models (512x512)"
-echo "7) Compress files for uploading"
+echo "7) Compress files for sharing"
 echo "8) All above"
-echo "9) Run the setup script to define variables and model name"
+echo "9) Run the setup script to define variables, model name and extension"
 echo "10) Exit"
 echo "11) Reload this script"
 echo "12) Reboot (Password needed)"
@@ -145,5 +152,4 @@ for choice in "${choices[@]}"; do
     esac
 done
 
-#########################################################################
 exec "$0"

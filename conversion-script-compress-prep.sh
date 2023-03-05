@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Set the name of the model to be replaced
-MODEL_NAME="changeme"
+# Set the name of the model and its extension to be replaced
+MODEL_NAME="modelname"
+EXTENSION="safetensors"
 
 # Set variables for easy updating
 ROOT_DIR="/ml-stable-diffusion-main"
@@ -10,7 +11,7 @@ MODELS_LOAD="/Volumes/External Drive/Model Archive"
 COMPRESSED_DUMP="/Volumes/External Drive/Uploads"
 DIFFUSERS_DUMP="${WORK_DIR}/Diffusers"
 EM_PICKLES_DUMP="${WORK_DIR}/Embedded Pickles"
-MODELS_LOCAL="${WORK_DIR}/${MODEL_NAME}"
+MODELS_LOCAL="${WORK_DIR}/${MODEL_NAME}.${EXTENSION}"
 MODELS_DUMP="${WORK_DIR}/Models"
 VAE_LOAD="${WORK_DIR}/VAE"
 
@@ -30,10 +31,10 @@ cat << "EOF"
 ▐███▌▐█▌.▐▌▐█•█▌▐█▄▄▌██ ██▌▐█▌▐█▌▐▌
 ·▀▀▀  ▀█▄▀▪.▀  ▀ ▀▀▀ ▀▀  █▪▀▀▀.▀▀▀ 
 
-Compressing and moving                                       
+Compression Script
 EOF
-echo -e "${RESET}${YELLOW}Version 06${RESET}"
-sleep 0.5
+echo -e "${RESET}${YELLOW}Version 07${RESET}"
+sleep 0.3
 
 # Print message indicating activation of environment
 echo "${RED}🚀 Activating Environment...🚀${RESET}"
@@ -41,17 +42,17 @@ sleep 0.2
 
 # Navigate to the project directory and activate the virtual environment
 cd "${ROOT_DIR}"
-sleep 0.3
+sleep 0.2
 . bin/activate
 sleep 0.2
 
 # Navigate to the work directory
 cd "${WORK_DIR}"
-sleep 0.2
+sleep 0.1
 
 # Print message indicating successful activation of environment
 echo "${GREEN}🎉 Environment Activated!${RESET}"
-sleep 0.5
+sleep 0.3
 
 ###################################################################
 
@@ -185,3 +186,4 @@ done
 
 
 echo "${GREEN} DONE! ${RESET}"
+echo ""
