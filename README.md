@@ -10,13 +10,13 @@ This script needs some setup parameters before it can be used.
 - MODELS_LOAD 	= Location of models (ckpt).
 - COMPRESSED_DUMP = Location where compressed files are sent.
 
-The initital setup ("conversion-script-setup.sh") will ask you to update these parameters.
+The initial setup ("conversion-script-setup.sh") will ask you to update these parameters.
 
-If there is any issues, the default varaible paramatiers can be changed in "conversion-script-variables.sh" under "# Define the variables".
+If there is any issues, the default variable parameters can be changed in "conversion-script-variables.sh" under "# Define the variables".
 
 ## Version 07:
 
-- now you can define modelname and extension. This is to incorperate conversion of safetensors as well as ckpt.
+- now you can define modelname and extension. This is to incorporate conversion of safetensors as well as ckpt.
 - VAE swapping method has changed. Simpler, more reliable.
 
 ## Note:
