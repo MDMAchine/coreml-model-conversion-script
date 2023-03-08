@@ -72,9 +72,9 @@ function convert_model() {
 
     # Set the output name for the converted model
     if [[ $PYTHON_MODULE == "python_coreml_stable_diffusion.torch2coreml" ]]; then
-        output_name="${model_name%_diffusers_model}_original_compiled_pruned"
+        output_name="${model_name%_diffusers_model}_split-einsum_compiled_pruned"
     else
-        output_name="${model_name%_diffusers_model}_original_compiled"
+        output_name="${model_name%_diffusers_model}_split-einsum_compiled"
     fi
 
     # Loop until the model is successfully converted or the maximum number of attempts is reached
