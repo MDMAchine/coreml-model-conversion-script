@@ -42,9 +42,7 @@ It will then also ask if you want to do any updates using pip (see notes).<br> A
 
 - Preferably use the "convert_original_stable_diffusion_to_diffusers.py" from the [updated diffusers](https://github.com/huggingface/diffusers).
 
-**Make sure variables are set first!**
-
-- Running the update option in initial setup will run an install/update of:
+- Running the update option in initial setup give you the option to run an install/update of (**Make sure variables are set first!**):
 
 `diffusers, transformers, accelerate, safetensors, omegaconf, torch, coremltools, scipy` along with `python_coreml_stable_diffusion` from local "ml_stable_diffusion"
 
