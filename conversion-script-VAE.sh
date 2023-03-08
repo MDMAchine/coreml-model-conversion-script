@@ -1,14 +1,15 @@
 #!/bin/bash
+VERSION=0.7.3
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="modelname"
-EXTENSION="safetensors"
+MODEL_NAME="experience-V7"
+EXTENSION="ckpt"
 
 # Set variables for easy updating
-ROOT_DIR="/ml-stable-diffusion-main"
-WORK_DIR="/ml-stable-diffusion-main/work"
-MODELS_LOAD="/Volumes/External Drive/Model Archive"
-COMPRESSED_DUMP="/Volumes/External Drive/Uploads"
+ROOT_DIR="/Volumes/External Drive/Stable Diffusion/ml-stable-diffusion-main"
+WORK_DIR="/Volumes/External Drive/Stable Diffusion/ml-stable-diffusion-main/local_conversion/work"
+MODELS_LOAD="/Volumes/External Drive - 14TB/Stable Diffusion/Model Archive"
+COMPRESSED_DUMP="/Volumes/External Drive - 14TB/Stable Diffusion/HuggingFace Uploads"
 DIFFUSERS_DUMP="${WORK_DIR}/Diffusers"
 EM_PICKLES_DUMP="${WORK_DIR}/Embedded Pickles"
 MODELS_LOCAL="${WORK_DIR}/${MODEL_NAME}"
@@ -33,7 +34,7 @@ cat << "EOF"
 
 VAE Embedding                                      
 EOF
-echo -e "${RESET}${YELLOW}Version 07${RESET}"
+echo "${RESET}${GREEN}Version${RESET}: ${YELLOW}${VERSION}${RESET}"
 sleep 0.3
 
 # Print message indicating activation of environment

@@ -1,14 +1,15 @@
 #!/bin/bash
+VERSION=0.7.3
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="modelname"
-EXTENSION="safetensors"
+MODEL_NAME="experience-V7"
+EXTENSION="ckpt"
 
 # Set variables for easy updating
-ROOT_DIR="/ml-stable-diffusion-main"
-WORK_DIR="/ml-stable-diffusion-main/work"
-MODELS_LOAD="/Volumes/External Drive/Model Archive"
-COMPRESSED_DUMP="/Volumes/External Drive/Uploads"
+ROOT_DIR="/Volumes/External Drive/Stable Diffusion/ml-stable-diffusion-main"
+WORK_DIR="/Volumes/External Drive/Stable Diffusion/ml-stable-diffusion-main/local_conversion/work"
+MODELS_LOAD="/Volumes/External Drive - 14TB/Stable Diffusion/Model Archive"
+COMPRESSED_DUMP="/Volumes/External Drive - 14TB/Stable Diffusion/HuggingFace Uploads"
 DIFFUSERS_DUMP="${WORK_DIR}/Diffusers"
 EM_PICKLES_DUMP="${WORK_DIR}/Embedded Pickles"
 MODELS_LOCAL="${WORK_DIR}/${MODEL_NAME}"
@@ -39,10 +40,9 @@ echo -e "${BOLD}${YELLOW}"
 cat << "EOF"
 ##############################################################
 EOF
-echo -e "${RESET}"
-cat << "EOF"
-EOF
-sleep 1
+echo "${RESET}${GREEN}Version${RESET}: ${YELLOW}${VERSION}${RESET}"
+echo ""
+sleep 0.5
 
 # Set Perms
 cd "$(dirname "${BASH_SOURCE[0]}")"
@@ -162,7 +162,7 @@ sleep 0.2
 
 ###################################################################
 
-echo "${CYAN}Option to update requiremnts via pip & place 'convert_original_stable_diffusion_to_diffusers.py' into root:${RESET}"
+echo "${CYAN}Option to update requirements via pip, place 'convert_original_stable_diffusion_to_diffusers.py' & 'torch2coreml_fp32.py' into root:${RESET}"
 echo ""
 echo ""
 sleep 0.2
@@ -189,7 +189,7 @@ echo ""
 echo ""
 sleep 0.2
 
-# ask if the user wants to update convert_original_stable_diffusion_to_diffusers.py
+# ask if the user wants to update/place convert_original_stable_diffusion_to_diffusers.py
 read -t 10 -p "${RED}Do you want to update 'convert_original_stable_diffusion_to_diffusers.py'?${RESET} (y/n) ${YELLOW}Skipping in 10 seconds.${RESET} " update_convert_script
 
 # if there is no input in 3 seconds, continue on
@@ -213,6 +213,36 @@ else
     echo "${RED}Skipping update of 'convert_original_stable_diffusion_to_diffusers.py'.${RESET}"
   fi
 fi
+
+echo ""
+echo ""
+sleep 0.2
+
+# ask if the user wants to update download torch2coreml_fp32.py?
+read -t 10 -p "${RED}Do you want to download 'torch2coreml_fp32.py'? Thisis required for creating 32 bit models!${RESET} (y/n) ${YELLOW}Skipping in 10 seconds.${RESET} " high_convert_script
+
+# if there is no input in 3 seconds, continue on
+if [ -z "$high_convert_script" ]; then
+  echo "${RED}No input received. Skipping update of 'torch2coreml_fp32.py'.${RESET}"
+else
+  if [ "$high_convert_script" == "y" ]; then
+    # backup the old script with a max limit of 3
+    for i in $(seq 2 -1 0); do
+      if [ -f "${ROOT_DIR}/python_coreml_stable_diffusion/torch2coreml_fp32_${i}.py" ]; then
+        mv "${ROOT_DIR}/python_coreml_stable_diffusion/torch2coreml_fp32_${i}.py" "${ROOT_DIR}/python_coreml_stable_diffusion/torch2coreml_fp32_$((i+1)).py"
+      fi
+    done
+    if [ -f "${ROOT_DIR}/python_coreml_stable_diffusion/torch2coreml_fp32.py" ]; then
+      mv "${ROOT_DIR}/python_coreml_stable_diffusion/torch2coreml_fp32.py" "${ROOT_DIR}/python_coreml_stable_diffusion/torch2coreml_fp32.py"
+    fi
+
+    # download the new script
+    curl -o "${ROOT_DIR}/python_coreml_stable_diffusion/torch2coreml_fp32.py" https://raw.githubusercontent.com/MDMAchine/coreml-model-conversion-script/main/misc/torch2coreml_fp32.py
+  else
+    echo "${RED}Skipping update of 'torch2coreml_fp32.py'.${RESET}"
+  fi
+fi
+
 
 echo ""
 echo ""

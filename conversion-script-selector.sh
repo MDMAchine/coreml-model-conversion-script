@@ -1,14 +1,15 @@
 #!/bin/bash
+VERSION=0.7.3
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="modelname"
-EXTENSION="safetensors"
+MODEL_NAME="experience-V7"
+EXTENSION="ckpt"
 
 # Set variables for easy updating
-ROOT_DIR="/ml-stable-diffusion-main"
-WORK_DIR="/ml-stable-diffusion-main/work"
-MODELS_LOAD="/Volumes/External Drive/Model Archive"
-COMPRESSED_DUMP="/Volumes/External Drive/Uploads"
+ROOT_DIR="/Volumes/External Drive/Stable Diffusion/ml-stable-diffusion-main"
+WORK_DIR="/Volumes/External Drive/Stable Diffusion/ml-stable-diffusion-main/local_conversion/work"
+MODELS_LOAD="/Volumes/External Drive - 14TB/Stable Diffusion/Model Archive"
+COMPRESSED_DUMP="/Volumes/External Drive - 14TB/Stable Diffusion/HuggingFace Uploads"
 DIFFUSERS_DUMP="${WORK_DIR}/Diffusers"
 EM_PICKLES_DUMP="${WORK_DIR}/Embedded Pickles"
 MODELS_LOCAL="${WORK_DIR}/${MODEL_NAME}"
@@ -33,7 +34,7 @@ cat << "EOF"
 
 Script Selection                                       
 EOF
-echo -e "${RESET}${YELLOW}Version 07${RESET}"
+echo "${RESET}${GREEN}Version${RESET}: ${YELLOW}${VERSION}${RESET}"
 sleep 0.3
 
 # Print message indicating activation of environment
@@ -105,39 +106,43 @@ sleep 0.3
 
 # Prompt the user to select which conversion scripts to run
 echo "Which conversion scripts would you like to run? (Enter space-separated numbers, e.g., 1 3 4)"
-echo "1) Enable/Disable custom converison sizes and vae types"
-echo "2) Create diffusers from original source model file"
-echo "3) Create custom VAE diffusers (also generates original source diffusers)"
-echo "4) Convert & compile Original CoreML models (512x512)"
-echo "5) Convert & compile Original CoreML models with custom sizes (see option 1)"
-echo "6) Convert & compile Split einsum CoreML models (512x512)"
-echo "7) Compress files for sharing"
-echo "8) All above"
-echo "9) Run the setup script to define variables, model name & extension, updates..."
-echo "10) Exit"
+echo "1) Enable/Disable custom converison sizes and vae types - GUI"
+echo "2) Enable/Disable custom converison sizes and vae types - terminal"
+echo "3) Create diffusers from original source model file"
+echo "4) Create custom VAE diffusers (also generates original source diffusers)"
+echo "5) Convert & compile Original CoreML models from diffusers (512x512)"
+echo "6) Convert & compile Original CoreML models from diffusers with custom sizes (see options 1 or 2)"
+echo "7) Convert & compile Split einsum CoreML models from diffusers (512x512)"
+echo "8) Compress files for sharing"
+echo "9) Run #'s 3-8"
+echo "10) Run the setup"
 echo "11) Reload this script"
-echo "12) Reboot (Password needed)"
+echo "12) Clear Diffusers folder"
+echo "13) Reboot (Password needed)"
+echo "14) Exit"
 read -ra choices
 
 # Check that the user input consists only of integers between 1 and 10
 for choice in "${choices[@]}"; do
-    if ! [[ "$choice" =~ ^(9|[1-8]|10|11|12)$ ]]; then
+    if ! [[ "$choice" =~ ^(1|2|[3-9]|10|11|12|13|14)$ ]]; then
         echo "Invalid choice: $choice."
         exit 1
     fi
 done
 
 # Run the selected conversion scripts with lower priority (nice -n 10)
+# Add option for model selector text version
 for choice in "${choices[@]}"; do
     case $choice in
         1)  python ./conversion-script-model-selector.py ;;
-        2)  nice -n 10 "${WORK_DIR}/conversion-script.sh" ;;
-        3)  nice -n 10 "${WORK_DIR}/conversion-script-VAE.sh" ;;
-        4)  nice -n 10 "${WORK_DIR}/conversion-script-original.sh" ;;
-        5)  nice -n 10 "${WORK_DIR}/conversion-script-original-cus-res.sh" ;;
-        6)  nice -n 10 "${WORK_DIR}/conversion-script-split-einsum.sh" ;;
-        7)  nice -n 10 "${WORK_DIR}/conversion-script-compress-prep.sh" ;;
-        8)  python ./conversion-script-model-selector.py
+        2)  python ./conversion-script-model-selector-text.py ;;
+        3)  nice -n 10 "${WORK_DIR}/conversion-script.sh" ;;
+        4)  nice -n 10 "${WORK_DIR}/conversion-script-VAE.sh" ;;
+        5)  nice -n 10 "${WORK_DIR}/conversion-script-original.sh" ;;
+        6)  nice -n 10 "${WORK_DIR}/conversion-script-original-cus-res.sh" ;;
+        7)  nice -n 10 "${WORK_DIR}/conversion-script-split-einsum.sh" ;;
+        8)  nice -n 10 "${WORK_DIR}/conversion-script-compress-prep.sh" ;;
+        9)  python ./conversion-script-model-selector.py
             nice -n 10 "${WORK_DIR}/conversion-script.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-VAE.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-original.sh"
@@ -145,10 +150,11 @@ for choice in "${choices[@]}"; do
             nice -n 10 "${WORK_DIR}/conversion-script-compress-prep.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-split-einsum.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-compress-prep.sh" ;;
-		9)  nice -n 10 "${WORK_DIR}/conversion-script-setup.sh" ;;
-        10) exit 1 ;;
+		10)  nice -n 10 "${WORK_DIR}/conversion-script-setup.sh" ;;
         11) exec "$0";;
-        12) sudo reboot ;;
+        12) rm -r ./Diffusers/* ;;
+        13) sudo reboot ;;
+        14) exit 1 ;;
     esac
 done
 

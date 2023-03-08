@@ -1,31 +1,9 @@
 import os
+import tkinter as tk
 
-# Define the filename pattern
-filename_pattern = [
-    'conversion-script-original-cus-res.sh',
-    'conversion-script-original.sh',
-    'conversion-script-split-einsum.sh'
-]
-
-# Define the search keywords
-keywords = [
-    'orangemix',
-    'moistmixv2',
-    'raw',
-    'ema-vae-1.5',
-    'ema-vae-2.1',
-    '256x256',
-    '320x320',
-    '384x384',
-    '576x576',
-    '256x384',
-    '384x256',
-    '320x576',
-    '576x320',
-    '512x768',
-    '768x512',
-    '768x768'
-]
+# Define the filename pattern and search keywords
+filename_pattern = ['conversion-script-original-cus-res.sh', 'conversion-script-original.sh', 'conversion-script-split-einsum.sh']
+keywords = ['orangemix', 'moistmixv2', 'raw', 'ema-vae-1.5', 'ema-vae-2.1', '256x256', '320x320', '384x384', '576x576', '256x384', '384x256', '320x576', '576x320', '512x768', '768x512', '768x768']
 
 # Define the function to enable/disable conversion_model lines
 def toggle_lines(keyword, enable, enable_all):
@@ -55,50 +33,42 @@ def toggle_lines(keyword, enable, enable_all):
                         if enable_all:
                             file.write(line.lstrip('#'))
                         else:
-                            file.write(line.lstrip('#') if enable else '#' + line)
+                            if enable:
+                                file.write(line.lstrip('#'))
+                            else:
+                                file.write('#' + line.lstrip('#'))
                     else:
                         file.write(line)
 
-
 # Define the main function
 def main():
-    menu = {
-        '1': 'orangemix-vae',
-        '2': 'moistmixv2-vae',
-        '3': 'raw',
-        '4': 'ema-vae-1.5',
-        '5': 'ema-vae-2.1',
-        '6': '256x256',
-        '7': '320x320',
-        '8': '384x384',
-        '9': '576x576',
-        '10': '768x768',
-        '11': '256x384',
-        '12': '384x256',
-        '13': '320x576',
-        '14': '576x320',
-        '15': '512x768',
-        '16': '768x512',
-    }
-    exit_loop = False
-    while not exit_loop:
-        print('Choose an option:')
-        for key, value in menu.items():
-            print(f'{key}. Toggle convert_model lines with keyword "{value}"')
-        print('17. Enable all conversion_model lines')
-        print('18. Disable all conversion_model lines')
-        print('19. Exit this script')
-        choice = input('Enter your choice: ')
-        if choice in menu:
-            enable = input('Enable or disable? y=on n=off (y/n): ')
-            toggle_lines(menu[choice], enable.lower() == 'y', False)
-        elif choice == '17':
-            toggle_lines(None, None, True)
-        elif choice == '18':
-            toggle_lines(None, None, False)
-        elif choice == '19':
-            exit_loop = True
+    root = tk.Tk()
+    root.title("Model Selector")
+    
+    # Define the keyword listbox
+    frame1 = tk.Frame(root)
+    frame1.pack(side="left", fill="y")
+    scrollbar = tk.Scrollbar(frame1, orient="vertical")
+    listbox = tk.Listbox(frame1, yscrollcommand=scrollbar.set, height=20, width=30)
+    scrollbar.config(command=listbox.yview)
+    scrollbar.pack(side="right", fill="y")
+    listbox.pack(side="left", fill="both", expand=True)
+    for keyword in keywords:
+        listbox.insert("end", keyword)
 
+    # Define the buttons
+    frame2 = tk.Frame(root)
+    frame2.pack(side="left", fill="y")
+    enable_button = tk.Button(frame2, text="Enable", command=lambda: toggle_lines(keywords[listbox.curselection()[0]], True, False) if listbox.curselection() else None)
+    enable_button.pack(side="top", padx=5, pady=5)
+    disable_button = tk.Button(frame2, text="Disable", command=lambda: toggle_lines(keywords[listbox.curselection()[0]], False, False) if listbox.curselection() else None)
+    disable_button.pack(side="top", padx=5, pady=5)
+    enable_all_button = tk.Button(frame2, text="Enable All", command=lambda: toggle_lines(None, True, True))
+    enable_all_button.pack(side="top", padx=5, pady=5)
+    disable_all_button = tk.Button(frame2, text="Disable All", command=lambda: toggle_lines(None, False, False))
+    disable_all_button.pack(side="top", padx=5, pady=5)
+
+    root.mainloop()
 
 if __name__ == '__main__':
     main()
