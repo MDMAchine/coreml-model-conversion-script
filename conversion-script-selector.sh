@@ -2,7 +2,7 @@
 VERSION=0.7.3
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="experience-V7"
+MODEL_NAME="model_name"
 EXTENSION="ckpt"
 
 # Set variables for easy updating
@@ -142,8 +142,7 @@ for choice in "${choices[@]}"; do
         6)  nice -n 10 "${WORK_DIR}/conversion-script-original-cus-res.sh" ;;
         7)  nice -n 10 "${WORK_DIR}/conversion-script-split-einsum.sh" ;;
         8)  nice -n 10 "${WORK_DIR}/conversion-script-compress-prep.sh" ;;
-        9)  python ./conversion-script-model-selector.py
-            nice -n 10 "${WORK_DIR}/conversion-script.sh"
+        9)  nice -n 10 "${WORK_DIR}/conversion-script.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-VAE.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-original.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-original-cus-res.sh"

@@ -2,7 +2,7 @@
 VERSION=0.7.3
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="experience-V7"
+MODEL_NAME="model_name"
 EXTENSION="ckpt"
 
 # Set variables for easy updating
