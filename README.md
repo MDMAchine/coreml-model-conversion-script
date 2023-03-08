@@ -19,7 +19,7 @@ It will then also ask if you want to do any updates using pip (see notes).<br> A
 
 ## Version 0.7.3:
 
-- Added a simple GUI option for model and vea enable/disable
+- Added a simple GUI option for model size and vea enable/disable
 - Updated to convert models at fp32. [torch2coreml_fp32.py](https://github.com/MDMAchine/coreml-model-conversion-script/blob/main/misc/torch2coreml_fp32.py) can be installed during setup.
 - fp16 is now defined as "pruned"
 
