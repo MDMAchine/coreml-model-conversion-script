@@ -8,10 +8,10 @@ CYAN=$(tput setaf 6)
 RESET=$(tput sgr 0)
 
 # Define the variables
-ROOT_DIR="/Volumes/External Drive/Stable Diffusion/ml-stable-diffusion-main"
-WORK_DIR="/Volumes/External Drive/Stable Diffusion/ml-stable-diffusion-main/local_conversion/work"
-MODELS_LOAD="/Volumes/External Drive - 14TB/Stable Diffusion/Model Archive"
-COMPRESSED_DUMP="/Volumes/External Drive - 14TB/Stable Diffusion/HuggingFace Uploads"
+ROOT_DIR="/ml-stable-diffusion-main"
+WORK_DIR="/ml-stable-diffusion-main/work"
+MODELS_LOAD="/Volumes/External Drive/Model Archive"
+COMPRESSED_DUMP="/Volumes/External Drive/Uploads"
 
 # Prompt the user to update the variables
 echo
