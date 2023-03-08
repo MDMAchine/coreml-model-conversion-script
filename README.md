@@ -50,8 +50,6 @@ It will then also ask if you want to do any updates using pip (see notes).<br> A
 
 - You will also get an option to grab "convert_original_stable_diffusion_to_diffusers.py" and have it placed accordingly.
 
-- The option is given in the setup to download and place "convert_original_stable_diffusion_to_diffusers.py" in the root where the script likes it to be.
-
 - Also the option is given to download and place "torch2coreml_fp32.py" **this is necessary to run the default 32fp model conversions**.
 
 - Variant selector(s) are rudimentary. If you cant remember whats on and off, either look at the files or "reset" it by running enable all, then disable all. After that make other selections.
