@@ -1,9 +1,9 @@
 #!/bin/bash
-VERSION=0.7.3
+VERSION=0.7.4
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="model_name"
-EXTENSION="ckpt"
+MODEL_NAME="theAllysMixIII-v1"
+EXTENSION="safetensors"
 
 # Set variables for easy updating
 ROOT_DIR="/ml-stable-diffusion-main"
@@ -100,7 +100,7 @@ if [[ "$answer" =~ ^[yY]$ ]]; then
 
     # Create the backup file
 	BACKUP_NAME="$DIR_NAME-$(date '+%Y-%m-%d-%H-%M-%S').zip"
-	find . -maxdepth 1 -type f ! -name '*.'$EXTENSION ! -name '.*' ! -path './Archive/*' ! -path './Diffusers/*' ! -path './Embedded Pickles/*' ! -path './links/*' ! -path './misc/*' ! -path './Models/*' ! -path './other scripts/*' ! -path './Safe-and-Stable-Ckpt2Safetensors-Conversion-Tool-GUI/*' ! -path './test scripts/*' ! -path './VAE/*' ! -path './yaml/*' -exec zip -r "backups/$BACKUP_NAME" {} +
+	find . -maxdepth 1 -type f ! -name '*.'$EXTENSION ! -name '*.'ckpt ! -name '*.'safetensors ! -name '.*' ! -path './Archive/*' ! -path './Diffusers/*' ! -path './Embedded Pickles/*' ! -path './links/*' ! -path './misc/*' ! -path './Models/*' ! -path './other scripts/*' ! -path './Safe-and-Stable-Ckpt2Safetensors-Conversion-Tool-GUI/*' ! -path './test scripts/*' ! -path './VAE/*' ! -path './yaml/*' -exec zip -r "backups/$BACKUP_NAME" {} +
 
     # Execute command if user chooses to update variables
     echo -e "${GREEN}Updating variables${RESET}"
@@ -140,7 +140,7 @@ if [[ "$answer" =~ ^[yY]$ ]]; then
 
     # Create the backup file
 	BACKUP_NAME="$DIR_NAME-$(date '+%Y-%m-%d-%H-%M-%S').zip"
-	find . -maxdepth 1 -type f ! -name '*.'$EXTENSION ! -name '.*' ! -path './Archive/*' ! -path './Diffusers/*' ! -path './Embedded Pickles/*' ! -path './links/*' ! -path './misc/*' ! -path './Models/*' ! -path './other scripts/*' ! -path './Safe-and-Stable-Ckpt2Safetensors-Conversion-Tool-GUI/*' ! -path './test scripts/*' ! -path './VAE/*' ! -path './yaml/*' -exec zip -r "backups/$BACKUP_NAME" {} +
+	find . -maxdepth 1 -type f ! -name '*.'$EXTENSION ! -name '*.'ckpt ! -name '*.'safetensors ! -name '.*' ! -path './Archive/*' ! -path './Diffusers/*' ! -path './Embedded Pickles/*' ! -path './links/*' ! -path './misc/*' ! -path './Models/*' ! -path './other scripts/*' ! -path './Safe-and-Stable-Ckpt2Safetensors-Conversion-Tool-GUI/*' ! -path './test scripts/*' ! -path './VAE/*' ! -path './yaml/*' -exec zip -r "backups/$BACKUP_NAME" {} +
 
     # Prompt the user for input
     read -p "Enter new model name: " input_name

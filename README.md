@@ -17,11 +17,17 @@ If there is any issues, the default variable parameters can be changed in "conve
 The setup script will also be the place where you can input the model name and extension.<br>
 It will then also ask if you want to do any updates using pip (see notes).<br> Also are options for grabbing "convert_original_stable_diffusion_to_diffusers.py" & "torch2coreml_fp32.py" then placing them in locations **for the script to work**.
 
+## Version 0.7.4:
+
+- After some testing it appears that 32bit models rending much slower when generating images. So for now the default conversion will be for 16bit (pruned) models unless specified.
+
+- Pruned model outputs are appended with 'fp16'
+
 ## Version 0.7.3:
 
 - Added a simple GUI option for model size and vea enable/disable
 - Updated to convert models at fp32. [torch2coreml_fp32.py](https://github.com/MDMAchine/coreml-model-conversion-script/blob/main/misc/torch2coreml_fp32.py) can be installed during setup.
-- fp16 is now defined as "pruned"
+- fp16 is now defined as "pruned" and vice-versa.
 
 ## Version 07:
 
@@ -36,7 +42,9 @@ It will then also ask if you want to do any updates using pip (see notes).<br> A
 
 - **Start the script by running "conversion-script-setup.sh"**
 
-- This script assumes you have an [environment](https://www.infoworld.com/article/3239675/virtualenv-and-venv-python-virtual-environments-explained.html) in "ml-stable-diffusion-main" already set up. Reference [here](https://github.com/godly-devotion/MochiDiffusion/wiki/How-to-convert-CKPT-or-SafeTensors-files-to-Core-ML) and [here](https://github.com/apple/ml-stable-diffusion#-converting-models-to-core-ml).
+- This script assumes you have an [environment](https://www.infoworld.com/article/3239675/virtualenv-and-venv-python-virtual-environments-explained.html) in "ml-stable-diffusion-main" already set up.<br>
+Reference:<br>
+[here](https://github.com/godly-devotion/MochiDiffusion/wiki/How-to-convert-CKPT-or-SafeTensors-files-to-Core-ML) and [here](https://github.com/apple/ml-stable-diffusion#-converting-models-to-core-ml).
 
 - This script expects ["convert_original_stable_diffusion_to_diffusers.py"](https://gist.github.com/saftle/c5e222c6231e7b19f01bb93ac9fcc191/raw/961d49481f472159c0696d929b10647b2c0cc158/replace_vae.py) to be located in root directory. And [diffusers](https://huggingface.co/docs/diffusers/installation) - [Link2](https://pypi.org/project/diffusers/) installed.
 

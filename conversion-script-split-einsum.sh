@@ -1,9 +1,9 @@
 #!/bin/bash
-VERSION=0.7.3
+VERSION=0.7.4
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="model_name"
-EXTENSION="ckpt"
+MODEL_NAME="theAllysMixIII-v1"
+EXTENSION="safetensors"
 
 # Set variables for easy updating
 ROOT_DIR="/ml-stable-diffusion-main"
@@ -72,14 +72,14 @@ function convert_model() {
 
     # Set the output name for the converted model
     if [[ $PYTHON_MODULE == "python_coreml_stable_diffusion.torch2coreml" ]]; then
-        output_name="${model_name%_diffusers_model}_split-einsum_compiled_pruned"
+        output_name="${model_name%_diffusers_model}_split-einsum_compiled_16fp"
     else
         output_name="${model_name%_diffusers_model}_split-einsum_compiled"
     fi
 
     # Loop until the model is successfully converted or the maximum number of attempts is reached
     until python -m $PYTHON_MODULE \
-        --compute-unit CPU_AND_GPU \
+        --compute-unit ALL \
         --convert-unet \
         --convert-text-encoder \
         --convert-vae-encoder \
@@ -104,22 +104,26 @@ function convert_model() {
 echo "Please select the model type to create (Default after 15 seconds):"
 echo "1. 16 bit (pruned)"
 echo "2. 32 bit"
-echo -n "Your selection (default: 2): "
+echo -n "Your selection (default: 1): "
 read -t 15 model_type
 
-# Set the Python module based on the user's selection or the default (32 bit)
-if [[ $model_type -eq 1 ]]; then
+# Set the Python module based on the user's selection or the default (16 bit)
+if [[ -z $model_type ]]; then
     PYTHON_MODULE=python_coreml_stable_diffusion.torch2coreml
 else
-    PYTHON_MODULE=python_coreml_stable_diffusion.torch2coreml_fp32
+    if [[ $model_type -eq 2 ]]; then
+        PYTHON_MODULE=python_coreml_stable_diffusion.torch2coreml_fp32
+    else
+        PYTHON_MODULE=python_coreml_stable_diffusion.torch2coreml
+    fi
 fi
 
 # Convert each model using the convert_model function
-##convert_model "${MODEL_NAME}_orangemix-vae_diffusers_model"
-##convert_model "${MODEL_NAME}_moistmixv2-vae_diffusers_model"
-convert_model "${MODEL_NAME}_raw_diffusers_model"
-##convert_model "${MODEL_NAME}_ema-vae-1.5_diffusers_model"
-##convert_model "${MODEL_NAME}_ema-vae-2.1_diffusers_model"
+#convert_model "${MODEL_NAME}_orangemix-vae_diffusers_model"
+#convert_model "${MODEL_NAME}_moistmixv2-vae_diffusers_model"
+#convert_model "${MODEL_NAME}_raw_diffusers_model"
+#convert_model "${MODEL_NAME}_ema-vae-1.5_diffusers_model"
+#convert_model "${MODEL_NAME}_ema-vae-2.1_diffusers_model"
 
 # Define the target model names as variables
 old_model_names=(
@@ -128,11 +132,11 @@ old_model_names=(
     "${MODEL_NAME}_raw_split-einsum_compiled/Resources/"
     "${MODEL_NAME}_ema-vae-1.5_split-einsum_compiled/Resources/"
     "${MODEL_NAME}_ema-vae-2.1_split-einsum_compiled/Resources/"
-    "${MODEL_NAME}_orangemix-vae_split-einsum_compiled_pruned/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_split-einsum_compiled_pruned/Resources/"
-    "${MODEL_NAME}_raw_split-einsum_compiled_pruned/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_split-einsum_compiled_pruned/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_split-einsum_compiled_pruned/Resources/"
+    "${MODEL_NAME}_orangemix-vae_split-einsum_compiled_16fp/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_split-einsum_compiled_16fp/Resources/"
+    "${MODEL_NAME}_raw_split-einsum_compiled_16fp/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_split-einsum_compiled_16fp/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_split-einsum_compiled_16fp/Resources/"
 )
 new_model_names=(
     "${MODEL_NAME}_split-einsum_om-vae"
@@ -140,11 +144,11 @@ new_model_names=(
     "${MODEL_NAME}_split-einsum"
     "${MODEL_NAME}_split-einsum_vae-1.5"
     "${MODEL_NAME}_split-einsum_vae-2.1"
-    "${MODEL_NAME}_split-einsum_om-vae_pruned"
-    "${MODEL_NAME}_split-einsum_mm2-vae_pruned"
-    "${MODEL_NAME}_split-einsum_pruned"
-    "${MODEL_NAME}_split-einsum_vae-1.5_pruned"
-    "${MODEL_NAME}_split-einsum_vae-2.1_pruned"
+    "${MODEL_NAME}_split-einsum_om-vae_16fp"
+    "${MODEL_NAME}_split-einsum_mm2-vae_16fp"
+    "${MODEL_NAME}_split-einsum_16fp"
+    "${MODEL_NAME}_split-einsum_vae-1.5_16fp"
+    "${MODEL_NAME}_split-einsum_vae-2.1_16fp"
 )
 
 # Perform the model name replacement for all target model names
@@ -185,8 +189,8 @@ rm -rf ./${MODEL_NAME}_moistmixv2-vae_split-einsum_compiled
 rm -rf ./${MODEL_NAME}_raw_split-einsum_compiled
 rm -rf ./${MODEL_NAME}_ema-vae-1.5_split-einsum_compiled
 rm -rf ./${MODEL_NAME}_ema-vae-2.1_split-einsum_compiled
-rm -rf ./${MODEL_NAME}_orangemix-vae_split-einsum_compiled_pruned
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_split-einsum_compiled_pruned
-rm -rf ./${MODEL_NAME}_raw_split-einsum_compiled_pruned
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_split-einsum_compiled_pruned
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_split-einsum_compiled_pruned
+rm -rf ./${MODEL_NAME}_orangemix-vae_split-einsum_compiled_16fp
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_split-einsum_compiled_16fp
+rm -rf ./${MODEL_NAME}_raw_split-einsum_compiled_16fp
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_split-einsum_compiled_16fp
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_split-einsum_compiled_16fp
