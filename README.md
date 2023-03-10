@@ -25,8 +25,6 @@ It will then also ask if you want to do any updates using pip (see notes).<br> A
 
 - After some testing it appears that 32bit models rending much slower when generating images. So for now the default conversion will be for 16bit (pruned) models unless specified.
 
-- Pruned model outputs are appended with 'fp16'
-
 ## Version 0.7.3:
 
 - Added a simple GUI option for model size and vea enable/disable
