@@ -1,9 +1,9 @@
 #!/bin/bash
-VERSION=0.7.4
+VERSION=0.7.5
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="theAllysMixIII-v1"
-EXTENSION="safetensors"
+MODEL_NAME="revAnimated-v1.1"
+EXTENSION="ckpt"
 
 # Set variables for easy updating
 ROOT_DIR="/ml-stable-diffusion-main"
@@ -72,9 +72,9 @@ function convert_model() {
 
     # Set the output name for the converted model
     if [[ $PYTHON_MODULE == "python_coreml_stable_diffusion.torch2coreml" ]]; then
-        output_name="${model_name%_diffusers_model}_original_compiled_16fp"
-    else
         output_name="${model_name%_diffusers_model}_original_compiled"
+    else
+        output_name="${model_name%_diffusers_model}_original_compiled_fp32"
     fi
 
     # Loop until the model is successfully converted or the maximum number of attempts is reached
@@ -122,35 +122,35 @@ fi
 # Convert each model using the convert_model function
 #convert_model "${MODEL_NAME}_orangemix-vae_diffusers_model"
 #convert_model "${MODEL_NAME}_moistmixv2-vae_diffusers_model"
-#convert_model "${MODEL_NAME}_raw_diffusers_model"
+convert_model "${MODEL_NAME}_raw_diffusers_model"
 #convert_model "${MODEL_NAME}_ema-vae-1.5_diffusers_model"
 #convert_model "${MODEL_NAME}_ema-vae-2.1_diffusers_model"
 
 # Define the target model names as variables
 old_model_names=(
+    "${MODEL_NAME}_orangemix-vae_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_raw_original_compiled/Resources_fp32/"
+    "${MODEL_NAME}_ema-vae-1.5_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_original_compiled_fp32/Resources/"
     "${MODEL_NAME}_orangemix-vae_original_compiled/Resources/"
     "${MODEL_NAME}_moistmixv2-vae_original_compiled/Resources/"
     "${MODEL_NAME}_raw_original_compiled/Resources/"
     "${MODEL_NAME}_ema-vae-1.5_original_compiled/Resources/"
     "${MODEL_NAME}_ema-vae-2.1_original_compiled/Resources/"
-    "${MODEL_NAME}_orangemix-vae_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_raw_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_original_compiled_16fp/Resources/"
 )
 
 new_model_names=(
+    "${MODEL_NAME}_original_om-vae_fp32"
+    "${MODEL_NAME}_original_mm2-vae_fp32"
+    "${MODEL_NAME}_original_fp32"
+    "${MODEL_NAME}_original_vae-1.5_fp32"
+    "${MODEL_NAME}_original_vae-2.1_fp32"
     "${MODEL_NAME}_original_om-vae"
     "${MODEL_NAME}_original_mm2-vae"
     "${MODEL_NAME}_original"
     "${MODEL_NAME}_original_vae-1.5"
     "${MODEL_NAME}_original_vae-2.1"
-    "${MODEL_NAME}_original_om-vae_16fp"
-    "${MODEL_NAME}_original_mm2-vae_16fp"
-    "${MODEL_NAME}_original_16fp"
-    "${MODEL_NAME}_original_vae-1.5_16fp"
-    "${MODEL_NAME}_original_vae-2.1_16fp"
 )
 
 # Perform the loop movement for all target model names
@@ -186,13 +186,13 @@ else
 fi
 
 # Remove all work files
+rm -rf ./${MODEL_NAME}_orangemix-vae_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_raw_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_original_compiled_fp32
 rm -rf ./${MODEL_NAME}_orangemix-vae_original_compiled
 rm -rf ./${MODEL_NAME}_moistmixv2-vae_original_compiled
 rm -rf ./${MODEL_NAME}_raw_original_compiled
 rm -rf ./${MODEL_NAME}_ema-vae-1.5_original_compiled
 rm -rf ./${MODEL_NAME}_ema-vae-2.1_original_compiled
-rm -rf ./${MODEL_NAME}_orangemix-vae_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_raw_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_original_compiled_16fp

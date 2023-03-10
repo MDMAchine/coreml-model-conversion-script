@@ -1,9 +1,9 @@
 #!/bin/bash
-VERSION=0.7.4
+VERSION=0.7.5
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="theAllysMixIII-v1"
-EXTENSION="safetensors"
+MODEL_NAME="revAnimated-v1.1"
+EXTENSION="ckpt"
 
 # Set variables for easy updating
 ROOT_DIR="/ml-stable-diffusion-main"
@@ -74,9 +74,9 @@ function convert_model() {
     
         # Set the output name for the converted model
     if [[ $PYTHON_MODULE == "python_coreml_stable_diffusion.torch2coreml" ]]; then
-        output_name="${output_name}_16fp"
-    else
         output_name="${output_name}"
+    else
+        output_name="${output_name}_fp32"
     fi
 
     # Loop until the model is successfully converted or the maximum number of attempts is reached
@@ -132,7 +132,7 @@ fi
 #convert_model "${MODEL_NAME}_ema-vae-1.5_diffusers_model" 32 32 "${MODEL_NAME}_ema-vae-1.5_256x256_original_compiled"
 #convert_model "${MODEL_NAME}_ema-vae-2.1_diffusers_model" 32 32 "${MODEL_NAME}_ema-vae-2.1_256x256_original_compiled"
 # - 320x320
-convert_model "${MODEL_NAME}_raw_diffusers_model" 40 40 "${MODEL_NAME}_raw_320x320_original_compiled"
+#convert_model "${MODEL_NAME}_raw_diffusers_model" 40 40 "${MODEL_NAME}_raw_320x320_original_compiled"
 #convert_model "${MODEL_NAME}_orangemix-vae_diffusers_model" 40 40 "${MODEL_NAME}_orangemix-vae_320x320_original_compiled"
 #convert_model "${MODEL_NAME}_moistmixv2-vae_diffusers_model" 40 40 "${MODEL_NAME}_moistmixv2-vae_320x320_original_compiled"
 #convert_model "${MODEL_NAME}_ema-vae-1.5_diffusers_model" 40 40 "${MODEL_NAME}_ema-vae-1.5_320x320_original_compiled"
@@ -198,6 +198,61 @@ convert_model "${MODEL_NAME}_raw_diffusers_model" 64 96 "${MODEL_NAME}_raw_768x5
 
 # Define the target model names as variables
 old_model_names=(
+    "${MODEL_NAME}_raw_256x256_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_orangemix-vae_256x256_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_256x256_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_256x256_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_256x256_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_raw_320x320_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_orangemix-vae_320x320_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_320x320_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_320x320_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_320x320_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_raw_384x384_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_orangemix-vae_384x384_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_384x384_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_384x384_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_384x384_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_raw_576x576_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_orangemix-vae_576x576_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_576x576_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_576x576_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_576x576_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_raw_384x256_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_orangemix-vae_384x256_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_384x256_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_384x256_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_384x256_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_raw_256x384_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_orangemix-vae_256x384_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_256x384_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_256x384_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_256x384_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_raw_576x320_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_orangemix-vae_576x320_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_576x320_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_576x320_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_576x320_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_raw_320x576_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_orangemix-vae_320x576_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_320x576_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_320x576_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_320x576_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_raw_512x768_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_orangemix-vae_512x768_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_512x768_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_512x768_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_512x768_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_raw_768x512_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_orangemix-vae_768x512_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_768x512_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_768x512_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_768x512_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_raw_768x768_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_orangemix-vae_768x768_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_moistmixv2-vae_768x768_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-1.5_768x768_original_compiled_fp32/Resources/"
+    "${MODEL_NAME}_ema-vae-2.1_768x768_original_compiled_fp32/Resources/"
     "${MODEL_NAME}_raw_256x256_original_compiled/Resources/"
     "${MODEL_NAME}_orangemix-vae_256x256_original_compiled/Resources/"
     "${MODEL_NAME}_moistmixv2-vae_256x256_original_compiled/Resources/"
@@ -253,63 +308,63 @@ old_model_names=(
     "${MODEL_NAME}_moistmixv2-vae_768x768_original_compiled/Resources/"
     "${MODEL_NAME}_ema-vae-1.5_768x768_original_compiled/Resources/"
     "${MODEL_NAME}_ema-vae-2.1_768x768_original_compiled/Resources/"
-    "${MODEL_NAME}_raw_256x256_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_orangemix-vae_256x256_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_256x256_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_256x256_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_256x256_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_raw_320x320_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_orangemix-vae_320x320_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_320x320_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_320x320_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_320x320_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_raw_384x384_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_orangemix-vae_384x384_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_384x384_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_384x384_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_384x384_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_raw_576x576_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_orangemix-vae_576x576_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_576x576_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_576x576_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_576x576_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_raw_384x256_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_orangemix-vae_384x256_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_384x256_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_384x256_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_384x256_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_raw_256x384_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_orangemix-vae_256x384_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_256x384_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_256x384_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_256x384_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_raw_576x320_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_orangemix-vae_576x320_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_576x320_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_576x320_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_576x320_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_raw_320x576_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_orangemix-vae_320x576_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_320x576_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_320x576_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_320x576_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_raw_512x768_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_orangemix-vae_512x768_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_512x768_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_512x768_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_512x768_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_raw_768x512_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_orangemix-vae_768x512_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_768x512_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_768x512_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_768x512_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_raw_768x768_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_orangemix-vae_768x768_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_moistmixv2-vae_768x768_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-1.5_768x768_original_compiled_16fp/Resources/"
-    "${MODEL_NAME}_ema-vae-2.1_768x768_original_compiled_16fp/Resources/"
 )
 new_model_names=(
+	"${MODEL_NAME}_original_256x256_fp32"
+	"${MODEL_NAME}_original_256x256_om-vae_fp32"
+	"${MODEL_NAME}_original_256x256_mm2-vae_fp32"
+	"${MODEL_NAME}_original_256x256_vae-1.5_fp32"
+	"${MODEL_NAME}_original_256x256_vae-2.1_fp32"
+	"${MODEL_NAME}_original_320x320_fp32"
+	"${MODEL_NAME}_original_320x320_om-vae_fp32"
+	"${MODEL_NAME}_original_320x320_mm2-vae_fp32"
+	"${MODEL_NAME}_original_320x320_vae-1.5_fp32"
+	"${MODEL_NAME}_original_320x320_vae-2.1_fp32"
+	"${MODEL_NAME}_original_384x384_fp32"
+	"${MODEL_NAME}_original_384x384_om-vae_fp32"
+	"${MODEL_NAME}_original_384x384_mm2-vae_fp32"
+	"${MODEL_NAME}_original_384x384_vae-1.5_fp32"
+	"${MODEL_NAME}_original_384x384_vae-2.1_fp32"
+	"${MODEL_NAME}_original_576x576_fp32"
+	"${MODEL_NAME}_original_576x576_om-vae_fp32"
+	"${MODEL_NAME}_original_576x576_mm2-vae_fp32"
+	"${MODEL_NAME}_original_576x576_vae-1.5_fp32"
+	"${MODEL_NAME}_original_576x576_vae-2.1_fp32"
+	"${MODEL_NAME}_original_384x256_fp32"
+	"${MODEL_NAME}_original_384x256_om-vae_fp32"
+	"${MODEL_NAME}_original_384x256_mm2-vae_fp32"
+	"${MODEL_NAME}_original_384x256_vae-1.5_fp32"
+	"${MODEL_NAME}_original_384x256_vae-2.1_fp32"
+	"${MODEL_NAME}_original_256x384_fp32"
+	"${MODEL_NAME}_original_256x384_om-vae_fp32"
+	"${MODEL_NAME}_original_256x384_mm2-vae_fp32"
+	"${MODEL_NAME}_original_256x384_vae-1.5_fp32"
+	"${MODEL_NAME}_original_256x384_vae-2.1_fp32"
+	"${MODEL_NAME}_original_576x320_fp32"
+	"${MODEL_NAME}_original_576x320_om-vae_fp32"
+	"${MODEL_NAME}_original_576x320_mm2-vae_fp32"
+	"${MODEL_NAME}_original_576x320_vae-1.5_fp32"
+	"${MODEL_NAME}_original_576x320_vae-2.1_fp32"
+	"${MODEL_NAME}_original_320x576_fp32"
+	"${MODEL_NAME}_original_320x576_om-vae_fp32"
+	"${MODEL_NAME}_original_320x576_mm2-vae_fp32"
+	"${MODEL_NAME}_original_320x576_vae-1.5_fp32"
+	"${MODEL_NAME}_original_320x576_vae-2.1_fp32"
+	"${MODEL_NAME}_original_512x768_fp32"
+	"${MODEL_NAME}_original_512x768_om-vae_fp32"
+	"${MODEL_NAME}_original_512x768_mm2-vae_fp32"
+	"${MODEL_NAME}_original_512x768_vae-1.5_fp32"
+	"${MODEL_NAME}_original_512x768_vae-2.1_fp32"
+	"${MODEL_NAME}_original_768x512_fp32"
+	"${MODEL_NAME}_original_768x512_om-vae_fp32"
+	"${MODEL_NAME}_original_768x512_mm2-vae_fp32"
+	"${MODEL_NAME}_original_768x512_vae-1.5_fp32"
+	"${MODEL_NAME}_original_768x512_vae-2.1_fp32"
+	"${MODEL_NAME}_original_768x768_fp32"
+	"${MODEL_NAME}_original_768x768_om-vae_fp32"
+	"${MODEL_NAME}_original_768x768_mm2-vae_fp32"
+	"${MODEL_NAME}_original_768x768_vae-1.5_fp32"
+	"${MODEL_NAME}_original_768x768_vae-2.1_fp32"
 	"${MODEL_NAME}_original_256x256"
 	"${MODEL_NAME}_original_256x256_om-vae"
 	"${MODEL_NAME}_original_256x256_mm2-vae"
@@ -365,61 +420,6 @@ new_model_names=(
 	"${MODEL_NAME}_original_768x768_mm2-vae"
 	"${MODEL_NAME}_original_768x768_vae-1.5"
 	"${MODEL_NAME}_original_768x768_vae-2.1"
-	"${MODEL_NAME}_original_256x256_16fp"
-	"${MODEL_NAME}_original_256x256_om-vae_16fp"
-	"${MODEL_NAME}_original_256x256_mm2-vae_16fp"
-	"${MODEL_NAME}_original_256x256_vae-1.5_16fp"
-	"${MODEL_NAME}_original_256x256_vae-2.1_16fp"
-	"${MODEL_NAME}_original_320x320_16fp"
-	"${MODEL_NAME}_original_320x320_om-vae_16fp"
-	"${MODEL_NAME}_original_320x320_mm2-vae_16fp"
-	"${MODEL_NAME}_original_320x320_vae-1.5_16fp"
-	"${MODEL_NAME}_original_320x320_vae-2.1_16fp"
-	"${MODEL_NAME}_original_384x384_16fp"
-	"${MODEL_NAME}_original_384x384_om-vae_16fp"
-	"${MODEL_NAME}_original_384x384_mm2-vae_16fp"
-	"${MODEL_NAME}_original_384x384_vae-1.5_16fp"
-	"${MODEL_NAME}_original_384x384_vae-2.1_16fp"
-	"${MODEL_NAME}_original_576x576_16fp"
-	"${MODEL_NAME}_original_576x576_om-vae_16fp"
-	"${MODEL_NAME}_original_576x576_mm2-vae_16fp"
-	"${MODEL_NAME}_original_576x576_vae-1.5_16fp"
-	"${MODEL_NAME}_original_576x576_vae-2.1_16fp"
-	"${MODEL_NAME}_original_384x256_16fp"
-	"${MODEL_NAME}_original_384x256_om-vae_16fp"
-	"${MODEL_NAME}_original_384x256_mm2-vae_16fp"
-	"${MODEL_NAME}_original_384x256_vae-1.5_16fp"
-	"${MODEL_NAME}_original_384x256_vae-2.1_16fp"
-	"${MODEL_NAME}_original_256x384_16fp"
-	"${MODEL_NAME}_original_256x384_om-vae_16fp"
-	"${MODEL_NAME}_original_256x384_mm2-vae_16fp"
-	"${MODEL_NAME}_original_256x384_vae-1.5_16fp"
-	"${MODEL_NAME}_original_256x384_vae-2.1_16fp"
-	"${MODEL_NAME}_original_576x320_16fp"
-	"${MODEL_NAME}_original_576x320_om-vae_16fp"
-	"${MODEL_NAME}_original_576x320_mm2-vae_16fp"
-	"${MODEL_NAME}_original_576x320_vae-1.5_16fp"
-	"${MODEL_NAME}_original_576x320_vae-2.1_16fp"
-	"${MODEL_NAME}_original_320x576_16fp"
-	"${MODEL_NAME}_original_320x576_om-vae_16fp"
-	"${MODEL_NAME}_original_320x576_mm2-vae_16fp"
-	"${MODEL_NAME}_original_320x576_vae-1.5_16fp"
-	"${MODEL_NAME}_original_320x576_vae-2.1_16fp"
-	"${MODEL_NAME}_original_512x768_16fp"
-	"${MODEL_NAME}_original_512x768_om-vae_16fp"
-	"${MODEL_NAME}_original_512x768_mm2-vae_16fp"
-	"${MODEL_NAME}_original_512x768_vae-1.5_16fp"
-	"${MODEL_NAME}_original_512x768_vae-2.1_16fp"
-	"${MODEL_NAME}_original_768x512_16fp"
-	"${MODEL_NAME}_original_768x512_om-vae_16fp"
-	"${MODEL_NAME}_original_768x512_mm2-vae_16fp"
-	"${MODEL_NAME}_original_768x512_vae-1.5_16fp"
-	"${MODEL_NAME}_original_768x512_vae-2.1_16fp"
-	"${MODEL_NAME}_original_768x768_16fp"
-	"${MODEL_NAME}_original_768x768_om-vae_16fp"
-	"${MODEL_NAME}_original_768x768_mm2-vae_16fp"
-	"${MODEL_NAME}_original_768x768_vae-1.5_16fp"
-	"${MODEL_NAME}_original_768x768_vae-2.1_16fp"
 )
 
 # Perform the model name replacement for all target model names
@@ -459,6 +459,61 @@ fi
 # Use -f to force deletion without prompting for confirmation
 # Use -r to delete the directory and its contents recursively
 
+rm -rf ./${MODEL_NAME}_raw_256x256_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_orangemix-vae_256x256_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_256x256_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_256x256_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_256x256_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_raw_320x320_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_orangemix-vae_320x320_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_320x320_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_320x320_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_320x320_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_raw_384x384_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_orangemix-vae_384x384_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_384x384_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_384x384_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_384x384_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_raw_576x576_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_orangemix-vae_576x576_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_576x576_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_576x576_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_576x576_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_raw_384x256_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_orangemix-vae_384x256_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_384x256_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_384x256_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_384x256_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_raw_256x384_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_orangemix-vae_256x384_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_256x384_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_256x384_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_256x384_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_raw_576x320_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_orangemix-vae_576x320_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_576x320_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_576x320_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_576x320_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_raw_320x576_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_orangemix-vae_320x576_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_320x576_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_320x576_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_320x576_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_raw_512x768_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_orangemix-vae_512x768_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_512x768_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_512x768_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_512x768_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_raw_768x512_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_orangemix-vae_768x512_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_768x512_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_768x512_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_768x512_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_raw_768x768_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_orangemix-vae_768x768_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_moistmixv2-vae_768x768_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-1.5_768x768_original_compiled_fp32
+rm -rf ./${MODEL_NAME}_ema-vae-2.1_768x768_original_compiled_fp32
 rm -rf ./${MODEL_NAME}_raw_256x256_original_compiled
 rm -rf ./${MODEL_NAME}_orangemix-vae_256x256_original_compiled
 rm -rf ./${MODEL_NAME}_moistmixv2-vae_256x256_original_compiled
@@ -514,58 +569,3 @@ rm -rf ./${MODEL_NAME}_orangemix-vae_768x768_original_compiled
 rm -rf ./${MODEL_NAME}_moistmixv2-vae_768x768_original_compiled
 rm -rf ./${MODEL_NAME}_ema-vae-1.5_768x768_original_compiled
 rm -rf ./${MODEL_NAME}_ema-vae-2.1_768x768_original_compiled
-rm -rf ./${MODEL_NAME}_raw_256x256_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_orangemix-vae_256x256_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_256x256_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_256x256_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_256x256_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_raw_320x320_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_orangemix-vae_320x320_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_320x320_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_320x320_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_320x320_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_raw_384x384_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_orangemix-vae_384x384_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_384x384_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_384x384_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_384x384_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_raw_576x576_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_orangemix-vae_576x576_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_576x576_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_576x576_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_576x576_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_raw_384x256_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_orangemix-vae_384x256_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_384x256_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_384x256_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_384x256_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_raw_256x384_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_orangemix-vae_256x384_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_256x384_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_256x384_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_256x384_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_raw_576x320_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_orangemix-vae_576x320_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_576x320_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_576x320_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_576x320_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_raw_320x576_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_orangemix-vae_320x576_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_320x576_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_320x576_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_320x576_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_raw_512x768_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_orangemix-vae_512x768_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_512x768_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_512x768_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_512x768_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_raw_768x512_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_orangemix-vae_768x512_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_768x512_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_768x512_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_768x512_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_raw_768x768_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_orangemix-vae_768x768_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_moistmixv2-vae_768x768_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-1.5_768x768_original_compiled_16fp
-rm -rf ./${MODEL_NAME}_ema-vae-2.1_768x768_original_compiled_16fp

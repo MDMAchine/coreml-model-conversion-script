@@ -17,6 +17,10 @@ If there is any issues, the default variable parameters can be changed in "conve
 The setup script will also be the place where you can input the model name and extension.<br>
 It will then also ask if you want to do any updates using pip (see notes).<br> Also are options for grabbing "convert_original_stable_diffusion_to_diffusers.py" & "torch2coreml_fp32.py" then placing them in locations **for the script to work**.
 
+## Version 0.7.5
+
+- 32 bit conversions have "fp32" in the filename. 16 bit versions remain unchanged.
+
 ## Version 0.7.4:
 
 - After some testing it appears that 32bit models rending much slower when generating images. So for now the default conversion will be for 16bit (pruned) models unless specified.

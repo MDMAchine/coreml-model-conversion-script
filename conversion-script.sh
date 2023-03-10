@@ -1,9 +1,9 @@
 #!/bin/bash
-VERSION=0.7.4
+VERSION=0.7.5
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="theAllysMixIII-v1"
-EXTENSION="safetensors"
+MODEL_NAME="revAnimated-v1.1"
+EXTENSION="ckpt"
 
 # Set variables for easy updating
 ROOT_DIR="/ml-stable-diffusion-main"
