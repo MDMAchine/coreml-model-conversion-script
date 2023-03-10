@@ -130,7 +130,7 @@ convert_model "${MODEL_NAME}_raw_diffusers_model"
 old_model_names=(
     "${MODEL_NAME}_orangemix-vae_original_compiled_fp32/Resources/"
     "${MODEL_NAME}_moistmixv2-vae_original_compiled_fp32/Resources/"
-    "${MODEL_NAME}_raw_original_compiled/Resources_fp32/"
+    "${MODEL_NAME}_raw_original_compiled_fp32/Resources/"
     "${MODEL_NAME}_ema-vae-1.5_original_compiled_fp32/Resources/"
     "${MODEL_NAME}_ema-vae-2.1_original_compiled_fp32/Resources/"
     "${MODEL_NAME}_orangemix-vae_original_compiled/Resources/"
