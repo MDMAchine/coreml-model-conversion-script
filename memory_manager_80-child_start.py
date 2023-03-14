@@ -74,7 +74,7 @@ def main():
     image_url = random.choice(image_links)
     response = requests.get(image_url)
     img = Image.open(io.BytesIO(response.content))
-    img = img.resize((432, 240), Image.ANTIALIAS)
+    img = img.resize((432, 240), Image.LANCZOS)
     photo = ImageTk.PhotoImage(img)
     canvas.create_image(0, 0, anchor="nw", image=photo)
 
