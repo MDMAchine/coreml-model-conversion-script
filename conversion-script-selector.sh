@@ -108,7 +108,7 @@ echo "${RED}5)${RESET}  Convert & compile Original CoreML models from diffusers 
 echo "${RED}6)${RESET}  Convert & compile Original CoreML models from diffusers with custom sizes (see options 1 or 2)"
 echo "${RED}7)${RESET}  Convert & compile Split einsum CoreML models from diffusers (512x512)"
 echo "${RED}8)${RESET}  Compress files for sharing"
-echo "${RED}9)${RESET}  Run #'s 3-8"
+echo "${RED}9)${RESET}  Run #'s 4-8"
 echo "${RED}10)${RESET} Set a new model name & extension"
 echo "${RED}11)${RESET} Run the setup/update script"
 echo "${RED}12)${RESET} Reload this script"
@@ -120,7 +120,7 @@ read -ra choices
 
 # Check that the user input consists only of integers between 1 and 10
 for choice in "${choices[@]}"; do
-    if ! [[ "$choice" =~ ^(1|2|[3-9]|10|11|12|13|14|15|16)$ ]]; then
+    if ! [[ "$choice" =~ ^(1|2|3|[4-9]|10|11|12|13|14|15|16)$ ]]; then
         echo "Invalid choice: $choice."
         exit 1
     fi
@@ -138,8 +138,7 @@ for choice in "${choices[@]}"; do
         6)  nice -n 10 "${WORK_DIR}/conversion-script-original-cus-res.sh" ;;
         7)  nice -n 10 "${WORK_DIR}/conversion-script-split-einsum.sh" ;;
         8)  nice -n 10 "${WORK_DIR}/conversion-script-compress-prep.sh" ;;
-        9)  nice -n 10 "${WORK_DIR}/conversion-script-original-VAE.sh"
-            nice -n 10 "${WORK_DIR}/conversion-script-custom-VAE.sh"
+        9)  nice -n 10 "${WORK_DIR}/conversion-script-custom-VAE.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-original.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-original-cus-res.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-compress-prep.sh"
