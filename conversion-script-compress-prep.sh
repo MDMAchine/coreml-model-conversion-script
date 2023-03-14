@@ -1,8 +1,8 @@
 #!/bin/bash
-VERSION=0.7.5
+VERSION=0.7.6
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="revAnimated-v1.1"
+MODEL_NAME="model_name"
 EXTENSION="ckpt"
 
 # Set variables for easy updating

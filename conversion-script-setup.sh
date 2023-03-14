@@ -1,8 +1,8 @@
 #!/bin/bash
-VERSION=0.7.5
+VERSION=0.7.6
 
 # Set the name of the model and its extension to be replaced
-MODEL_NAME="revAnimated-v1.1"
+MODEL_NAME="model_name"
 EXTENSION="ckpt"
 
 # Set variables for easy updating
@@ -23,26 +23,20 @@ RED=$(tput setaf 1)
 CYAN=$(tput setaf 6)
 RESET=$(tput sgr 0)
 
-###################################################################
-echo -e "${BOLD}${YELLOW}"
+echo -e "${BOLD}${CYAN}"
 cat << "EOF"
-##############################################################
-EOF
-echo -e "${BOLD}${RED}"
-cat << "EOF"
-CONVERSION SCRIPT BY:
- _______ _____  _______ _______        __     __              
-|   |   |     \|   |   |   _   |.----.|  |--.|__|.-----.-----.
-|       |  --  |       |       ||  __||     ||  ||     |  -__|
-|__|_|__|_____/|__|_|__|___|___||____||__|__||__||__|__|_____|
-EOF
-echo -e "${BOLD}${YELLOW}"
-cat << "EOF"
-##############################################################
+
+ ▄▄·       ▄▄▄  ▄▄▄ .• ▌ ▄ ·. ▄▄▌  
+▐█ ▌▪▪     ▀▄ █·▀▄.▀··██ ▐███▪██•  
+██ ▄▄ ▄█▀▄ ▐▀▀▄ ▐▀▀▪▄▐█ ▌▐▌▐█·██▪  
+▐███▌▐█▌.▐▌▐█•█▌▐█▄▄▌██ ██▌▐█▌▐█▌▐▌
+·▀▀▀  ▀█▄▀▪.▀  ▀ ▀▀▀ ▀▀  █▪▀▀▀.▀▀▀ 
+
+Script Configuration                                       
 EOF
 echo "${RESET}${GREEN}Version${RESET}: ${YELLOW}${VERSION}${RESET}"
+sleep 0.3
 echo ""
-sleep 0.5
 
 # Set Perms
 cd "$(dirname "${BASH_SOURCE[0]}")"
@@ -53,18 +47,26 @@ sleep 0.1
 ###################################################################
 
 # Print the variables name on the screen
-echo "${RED}Current ROOT_DIR is:${RESET} ${GREEN}$ROOT_DIR${RESET}"
-echo "${RED}Current WORK_DIR is:${RESET} ${GREEN}$WORK_DIR${RESET}"
-echo "${RED}Current MODELS_LOAD is:${RESET} ${GREEN}$MODELS_LOAD${RESET}"
-echo "${RED}Current COMPRESSED_DUMP is:${RESET} ${GREEN}$COMPRESSED_DUMP${RESET}"
-echo "${RED}Current DIFFUSERS_DUMP is:${RESET} ${GREEN}$DIFFUSERS_DUMP${RESET}"
-echo "${RED}Current MODELS_LOCAL is:${RESET} ${GREEN}$MODELS_LOCAL${RESET}"
-echo "${RED}Current MODELS_DUMP is:${RESET} ${GREEN}$MODELS_DUMP${RESET}"
+echo "${RED}Current ROOT_DIR is:${RESET}"
+echo "${GREEN}$ROOT_DIR${RESET}"
+echo "${RED}Current WORK_DIR is:${RESET}"
+echo "${GREEN}$WORK_DIR${RESET}"
+echo "${RED}Current MODELS_LOAD is:${RESET}"
+echo "${GREEN}$MODELS_LOAD${RESET}"
+echo "${RED}Current COMPRESSED_DUMP is:${RESET}"
+echo "${GREEN}$COMPRESSED_DUMP${RESET}"
+echo "${RED}Current DIFFUSERS_DUMP is:${RESET}"
+echo "${GREEN}$DIFFUSERS_DUMP${RESET}"
+echo "${RED}Current MODELS_LOCAL is:${RESET}"
+echo "${GREEN}$MODELS_LOCAL${RESET}"
+echo "${RED}Current MODELS_DUMP is:${RESET}"
+echo "${GREEN}$MODELS_DUMP${RESET}"
 echo ""
 sleep 0.3
 
 # Print the current model name on the screen
-echo "${RED}Current model name and extension is:${RESET} ${GREEN}$MODEL_NAME.$EXTENSION${RESET}"
+echo "${RED}Current model name and extension is:${RESET}"
+echo "${GREEN}$MODEL_NAME.$EXTENSION${RESET}"
 
 echo ""
 echo ""
@@ -175,7 +177,7 @@ if [ -z "$update_diffusers_safetensors" ]; then
   echo "${RED}No input received. Skipping update of diffusers and safetensors.${RESET}"
 else
   if [ "$update_diffusers_safetensors" == "y" ]; then
-    pip install --upgrade diffusers transformers accelerate safetensors omegaconf torch coremltools scipy
+    pip install --upgrade diffusers transformers accelerate safetensors omegaconf torch coremltools scipy huggingface-hub Pillow
     cd "${ROOT_DIR}"
 	pip install -e .
 	cd "${WORK_DIR}"
@@ -219,7 +221,7 @@ echo ""
 sleep 0.2
 
 # ask if the user wants to update download torch2coreml_fp32.py?
-read -t 10 -p "${RED}Do you want to download 'torch2coreml_fp32.py'? Thisis required for creating 32 bit models!${RESET} (y/n) ${YELLOW}Skipping in 10 seconds.${RESET} " high_convert_script
+read -t 10 -p "${RED}Do you want to download 'torch2coreml_fp32.py'? This is required for creating 32 bit models!${RESET} (y/n) ${YELLOW}Skipping in 10 seconds.${RESET} " high_convert_script
 
 # if there is no input in 3 seconds, continue on
 if [ -z "$high_convert_script" ]; then
@@ -251,7 +253,7 @@ sleep 0.2
 ###################################################################
 
 # Define variables
-FOLDERS=("Diffusers" "Models" "VAE")
+FOLDERS=("Diffusers" "Models" "VAE" "yaml")
 TIMER=3
 
 # Check if folders exist and create them if they don't, or print a message if they do
