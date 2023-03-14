@@ -138,7 +138,7 @@ for choice in "${choices[@]}"; do
         6)  nice -n 10 "${WORK_DIR}/conversion-script-original-cus-res.sh" ;;
         7)  nice -n 10 "${WORK_DIR}/conversion-script-split-einsum.sh" ;;
         8)  nice -n 10 "${WORK_DIR}/conversion-script-compress-prep.sh" ;;
-        9)  nice -n 10 "${WORK_DIR}/conversion-script.original-VAEsh"
+        9)  nice -n 10 "${WORK_DIR}/conversion-script.original-VAE.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-custom-VAE.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-original.sh"
             nice -n 10 "${WORK_DIR}/conversion-script-original-cus-res.sh"
